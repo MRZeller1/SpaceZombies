@@ -1,0 +1,3 @@
+/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles/SpaceZombies.dir
+/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles/edit_cache.dir
+/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles/rebuild_cache.dir
