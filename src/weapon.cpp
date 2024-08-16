@@ -1,7 +1,7 @@
 #include "weapon.h"
 #include "raylib.h"
 
-Weapon::Weapon(int damage, int ammo, int maxAmmo, float fireRate, float reloadTime, bool isFlameThrower, bool isRifle)
+Weapon::Weapon(int damage, int ammo, int maxAmmo, float fireRate, float reloadTime, bool isFlameThrower, bool isRifle, CollisionMap &collisionMap) : collisionMap(collisionMap)
 {
     this->damage = damage;
     this->ammo = ammo;
@@ -14,6 +14,10 @@ Weapon::Weapon(int damage, int ammo, int maxAmmo, float fireRate, float reloadTi
     this->outOfAmmo = false;
     this->isFlameThrower = isFlameThrower;
     this->isRifle = isRifle;
+}
+Weapon::~Weapon() {
+    // Implement any necessary cleanup here
+    // For example, if you're managing any dynamically allocated memory
 }
 void Weapon::update(float deltaTime)
 {
@@ -64,3 +68,9 @@ void Weapon::reload()
     
 }
 
+void Weapon::createBullet(Vector2 position, Vector2 direction) {
+    // Implement bullet creation logic here
+    // For example:
+    // Bullet* newBullet = new Bullet(position, direction, bulletSpeed, bulletDamage, bulletLifeSpan);
+    // bullets.push_back(newBullet);
+}

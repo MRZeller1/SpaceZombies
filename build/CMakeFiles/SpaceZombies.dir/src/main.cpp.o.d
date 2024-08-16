@@ -864,6 +864,11 @@ CMakeFiles/SpaceZombies.dir/src/main.cpp.o: \
   /Users/michaelzeller/Documents/SpaceZombies/include/collisionMap.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/gameobject.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/collisionmanager.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/pistols.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/weapon.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/bullet.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/flameThrower.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/rifle.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/zombie.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/npc.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/bug.h \

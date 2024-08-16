@@ -6,7 +6,7 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/Users/michaelzeller/Documents/SpaceZombies/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks
 
-CXX_FLAGSarm64 = -g -std=c++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -Wpedantic -Werror=return-type -Werror=uninitialized -Wno-missing-braces -Wno-unused-parameter -Wno-unused-variable -Wno-reorder
+CXX_FLAGSarm64 = -std=c++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -Wpedantic -Werror=return-type -Werror=uninitialized -Wno-missing-braces -Wno-unused-parameter -Wno-unused-variable -Wno-reorder
 
-CXX_FLAGS = -g -std=c++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -Wpedantic -Werror=return-type -Werror=uninitialized -Wno-missing-braces -Wno-unused-parameter -Wno-unused-variable -Wno-reorder
+CXX_FLAGS = -std=c++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -Wpedantic -Werror=return-type -Werror=uninitialized -Wno-missing-braces -Wno-unused-parameter -Wno-unused-variable -Wno-reorder
 

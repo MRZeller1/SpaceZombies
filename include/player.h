@@ -43,7 +43,6 @@ public:
     void changeWeapon();
     void fireWeapon();
     void reloadWeapon();
-    void changeWeapon();
 
     // Visual instanciation of player
     // getters for positions

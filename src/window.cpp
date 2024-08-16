@@ -63,7 +63,7 @@ void Window::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug
         DrawRectangle(0, 0, 4000, 4000, DARKGRAY);
 
         grid.draw();
-        if (gameStart = false || aliveZombieCount == 0)
+        if (gameStart == false || aliveZombieCount == 0)
         {
             createZombies(zombies);
             //createBugs(bugs);

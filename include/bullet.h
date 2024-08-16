@@ -12,7 +12,7 @@ private:
     float damage;
     float x;
     float y;
-    float direction;
+    Vector2 direction;
     float lifetime;
     bool active;
     Grid &grid;
@@ -23,6 +23,7 @@ public:
     Bullet(int size, float speed, float damage, float lifetime, Grid &grid , CollisionMap &collisionMap);
     ~Bullet();
     void setActive(bool active, Vector2 position, Vector2 direction);
+    bool isActive(){return active;};
     void deactivate();
 
 };

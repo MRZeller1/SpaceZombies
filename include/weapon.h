@@ -35,11 +35,12 @@ protected:
     int bulletSpeed;
     int bulletDamage;
     int bulletLifeSpan;
+    std::vector<Bullet> bullets;
     CollisionMap &collisionMap;
 
 
 
-    public:
+public:
 
     Weapon(int damage, int ammo, int maxAmmo, float fireRate, float reloadTime, bool isFlameThrower, bool isRifle, CollisionMap &collisionMap);
     ~Weapon();

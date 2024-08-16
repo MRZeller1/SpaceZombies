@@ -1,6 +1,6 @@
 #include "bullet.h"
 
-Bullet::Bullet(int size, float speed, float damage, float lifetime, CollisionMap &collisionMap) : size(size), speed(speed), damage(damage), lifetime(lifetime), collisionMap(collisionMap)
+Bullet::Bullet(int size, float speed, float damage, float lifetime, Grid &grid, CollisionMap &collisionMap) : size(size), speed(speed), damage(damage), lifetime(lifetime), grid(grid), collisionMap(collisionMap)
 {
     active = false;
 }
