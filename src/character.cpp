@@ -1,5 +1,7 @@
 #include "character.h"
-
+#include "collisionMap.h"
+#include "raylib.h"
+#include "grid.h"
 
 void Character::updatePosition(float deltaTime, const std::vector<GameObject *> &objects)
 {
@@ -8,23 +10,32 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     Rectangle newRectY = {position.x - currentTexture.width / 2, newPos.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height};
 
     bool collisionX = false, collisionY = false;
-    for (const GameObject *object : objects)
-    {
+    //for (const GameObject *object : objects)
+    
         // cehckCollision doesnt prevent any collisions between objects or characters
         // check bounds prevents anyone from moving at all
-        if (collisionMap.checkCollision(newRectX, personalCollisionID) || collisionMap.checkBounds(newRectX)){
-            //if(type == 1)
-                //std::cout << "Player collision!" << "\n";
-            collisionX = true;
+        
+        if(type == PLAYER_TYPE){
+            if(collisionMap.checkPlayerCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX)){
+                collisionX = true;
+            }
+            else if(collisionMap.checkPlayerCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY)){
+                collisionY = true;
+            }
         }
-        if (collisionMap.checkCollision(newRectY, personalCollisionID) || collisionMap.checkBounds(newRectY)){
-            collisionY = true;
-            //if(type == 1)
-                //std::cout << "Player collision!" << "\n";
+        if(type == NPC_TYPE){
+            if(collisionMap.checkNPCCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX)){
+                collisionX = true;
+            }
+            else if(collisionMap.checkNPCCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY)){
+                collisionY = true;
+            }
         }
+        
+        
         if (collisionX && collisionY)
-            break;
-    }
+            return;
+    
     if (collisionX || collisionY)
     {
         colliding = true;
@@ -42,7 +53,7 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     collisionBox->y = position.y - currentTexture.height / 2;
     collisionBox->width = (float)currentTexture.width;
     collisionBox->height = (float)currentTexture.height;
-    collisionMap.updateDynamicCollisionRectangle(personalCollisionID, collisionBox);
+   
 }
 // update animation will be here
 void Character::updateAnimation()

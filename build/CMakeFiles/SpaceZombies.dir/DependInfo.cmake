@@ -11,8 +11,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/michaelzeller/Documents/SpaceZombies/src/bug.cpp" "CMakeFiles/SpaceZombies.dir/src/bug.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/bug.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/bullet.cpp" "CMakeFiles/SpaceZombies.dir/src/bullet.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/bullet.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/character.cpp" "CMakeFiles/SpaceZombies.dir/src/character.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/character.cpp.o.d"
-  "/Users/michaelzeller/Documents/SpaceZombies/src/collisionmanager.cpp" "CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/collisonMap.cpp" "CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o.d"
+  "/Users/michaelzeller/Documents/SpaceZombies/src/game.cpp" "CMakeFiles/SpaceZombies.dir/src/game.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/game.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/gameobject.cpp" "CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/grid.cpp" "CMakeFiles/SpaceZombies.dir/src/grid.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/grid.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/gridNode.cpp" "CMakeFiles/SpaceZombies.dir/src/gridNode.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/gridNode.cpp.o.d"
@@ -22,7 +22,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/michaelzeller/Documents/SpaceZombies/src/pistols.cpp" "CMakeFiles/SpaceZombies.dir/src/pistols.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/pistols.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/player.cpp" "CMakeFiles/SpaceZombies.dir/src/player.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/player.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/weapon.cpp" "CMakeFiles/SpaceZombies.dir/src/weapon.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/weapon.cpp.o.d"
-  "/Users/michaelzeller/Documents/SpaceZombies/src/window.cpp" "CMakeFiles/SpaceZombies.dir/src/window.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/window.cpp.o.d"
   "/Users/michaelzeller/Documents/SpaceZombies/src/zombie.cpp" "CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o" "gcc" "CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o.d"
   )
 

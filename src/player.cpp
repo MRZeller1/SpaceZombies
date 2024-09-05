@@ -1,12 +1,17 @@
+
 #include "player.h"
 
+#include "pistols.h"
+#include "collisionMap.h"
+#include "grid.h"
 
-Player::Player(Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED)
+Player::Player(Pistols pistols, Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED)
 {
     loadTextures();
     type = 1;
     currentTexture = leftTexture;
     spawnPlayer(200, 200);
+    this->pistols = &pistols;
 }
 
 Player::~Player()
@@ -16,13 +21,18 @@ Player::~Player()
     UnloadTexture(leftWalkTexture2);
 }
 
+
 void Player::update(float deltaTime, const std::vector<GameObject *> objects)
 {
+    if(!alive) return;
     handleMovementInput(deltaTime);
     updatePosition(deltaTime, objects);
     updateGridPosition();
     handleSprinting(deltaTime);
     updateAnimation();
+    reloadWeapon();
+    fireWeapon();
+    changeWeapon();
     updateCamera();
 }
 
@@ -93,8 +103,7 @@ void Player::spawnPlayer(float startx, float starty)
     collisionBox = new Rectangle{position.x - currentTexture.width / 2, position.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height};
     collisionID_players++;
     personalCollisionID = collisionID_players;
-    collisionMap.addDynamicCollisionRectangle(personalCollisionID, collisionBox);
-    collisionMap.updateMapRangesPlayer(collisionID_players);
+    collisionMap.addPlayerCollisionRectangle(personalCollisionID, this);
     grid.setCellAttributes(gridPos.x, gridPos.y, 1);
     camera = {0};
     camera.target = (Vector2){position.x, position.y};
@@ -103,18 +112,24 @@ void Player::spawnPlayer(float startx, float starty)
     camera.zoom = 2.25f;
     alive = true;
 }
-void Player::reloadWeapon(){
-    if (IsKeyPressed(KEY_R)){
+void Player::reloadWeapon()
+{
+    if (IsKeyPressed(KEY_R))
+    {
         currentWeapon->reload();
     }
 }
-void Player::fireWeapon(){
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+void Player::fireWeapon()
+{
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
         currentWeapon->fire(position, direction);
     }
 }
-void Player::changeWeapon(){
-    if (IsKeyPressed(KEY_A)){
+void Player::changeWeapon()
+{
+    if (IsKeyPressed(KEY_A))
+    {
         currentWeapon->setActiveWeapon(false);
         currentWeapon = pistols;
         currentWeapon->setActiveWeapon(true);

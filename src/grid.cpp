@@ -1,6 +1,5 @@
 #include "grid.h"
 
-
 // constructor
 Grid::Grid(int width, int height, int cellSize)
 {
@@ -11,7 +10,6 @@ Grid::Grid(int width, int height, int cellSize)
     grid.resize(rows, std::vector<GridNode *>(cols, nullptr));
     initGrid();
     origin = {0, 0};
-
 }
 
 // drawing grid for game testing purposes

@@ -1,6 +1,8 @@
-#include "gameobject.h"
-#include <iostream>
 
+#include <iostream>
+#include "gameobject.h"
+#include "grid.h"
+#include "collisionMap.h"
 
 GameObject::GameObject(float startx, float starty, Color color, float width, float height, float offsetX, float offsetY, Grid &grid, CollisionMap &collisionMap) : x(startx), y(starty), color(color), grid(grid), collisionMap(collisionMap)
 {
@@ -12,7 +14,7 @@ GameObject::GameObject(float startx, float starty, Color color, float width, flo
     Vector2 gridSize = grid.getObjectGridSize(width, height);
 
     collisionMap.addStaticCollisionRectangle(collisionRect);
-    
+
     setGridNodeAttributes(gridPos, gridSize);
 }
 // Constructor where the user can specify collison zone size
@@ -31,7 +33,6 @@ void GameObject::draw()
     DrawRectangle(x, y, collisionRect->width, collisionRect->height, color);
     DrawRectangleLines(collisionRect->x, collisionRect->y, collisionRect->width, collisionRect->height, RED);
 }
-
 
 void GameObject::setGridNodeAttributes(Vector2 gridPos, Vector2 gridSize)
 {

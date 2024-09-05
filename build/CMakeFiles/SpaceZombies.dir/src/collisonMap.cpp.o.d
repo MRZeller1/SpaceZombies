@@ -3,7 +3,6 @@ CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o: \
   /Users/michaelzeller/Documents/SpaceZombies/include/collisionMap.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/raylib.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
-  /Users/michaelzeller/Documents/SpaceZombies/include/grid.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy_move_common.h \
@@ -854,9 +853,12 @@ CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__node_handle \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/optional \
-  /Users/michaelzeller/Documents/SpaceZombies/include/gridNode.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/forward_declarations.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/npc.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/character.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/ostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/bitset \
-  /Users/michaelzeller/Documents/SpaceZombies/include/gameobject.h
+  /Users/michaelzeller/Documents/SpaceZombies/include/player.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/bullet.h

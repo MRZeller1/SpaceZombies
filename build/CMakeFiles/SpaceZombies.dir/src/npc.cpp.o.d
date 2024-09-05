@@ -4,6 +4,7 @@ CMakeFiles/SpaceZombies.dir/src/npc.cpp.o: \
   /Users/michaelzeller/Documents/SpaceZombies/include/raylib.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
   /Users/michaelzeller/Documents/SpaceZombies/include/character.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/forward_declarations.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/cmath \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__assert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__config \
@@ -853,13 +854,11 @@ CMakeFiles/SpaceZombies.dir/src/npc.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/temp_value.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__split_buffer \
   /Users/michaelzeller/Documents/SpaceZombies/include/grid.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/gridNode.h \
+  /Users/michaelzeller/Documents/SpaceZombies/include/collisionMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/unordered_map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/is_transparent.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__hash_table \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__node_handle \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/optional \
-  /Users/michaelzeller/Documents/SpaceZombies/include/gridNode.h \
-  /Users/michaelzeller/Documents/SpaceZombies/include/collisionMap.h \
-  /Users/michaelzeller/Documents/SpaceZombies/include/gameobject.h \
-  /Users/michaelzeller/Documents/SpaceZombies/include/collisionmanager.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/optional

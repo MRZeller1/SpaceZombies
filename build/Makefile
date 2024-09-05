@@ -201,30 +201,6 @@ src/character.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/character.cpp.s
 .PHONY : src/character.cpp.s
 
-src/collisionmanager.o: src/collisionmanager.cpp.o
-.PHONY : src/collisionmanager.o
-
-# target to build an object file
-src/collisionmanager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o
-.PHONY : src/collisionmanager.cpp.o
-
-src/collisionmanager.i: src/collisionmanager.cpp.i
-.PHONY : src/collisionmanager.i
-
-# target to preprocess a source file
-src/collisionmanager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.i
-.PHONY : src/collisionmanager.cpp.i
-
-src/collisionmanager.s: src/collisionmanager.cpp.s
-.PHONY : src/collisionmanager.s
-
-# target to generate assembly for a file
-src/collisionmanager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.s
-.PHONY : src/collisionmanager.cpp.s
-
 src/collisonMap.o: src/collisonMap.cpp.o
 .PHONY : src/collisonMap.o
 
@@ -248,6 +224,30 @@ src/collisonMap.s: src/collisonMap.cpp.s
 src/collisonMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.s
 .PHONY : src/collisonMap.cpp.s
+
+src/game.o: src/game.cpp.o
+.PHONY : src/game.o
+
+# target to build an object file
+src/game.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/game.cpp.o
+.PHONY : src/game.cpp.o
+
+src/game.i: src/game.cpp.i
+.PHONY : src/game.i
+
+# target to preprocess a source file
+src/game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/game.cpp.i
+.PHONY : src/game.cpp.i
+
+src/game.s: src/game.cpp.s
+.PHONY : src/game.s
+
+# target to generate assembly for a file
+src/game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/game.cpp.s
+.PHONY : src/game.cpp.s
 
 src/gameobject.o: src/gameobject.cpp.o
 .PHONY : src/gameobject.o
@@ -465,30 +465,6 @@ src/weapon.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/weapon.cpp.s
 .PHONY : src/weapon.cpp.s
 
-src/window.o: src/window.cpp.o
-.PHONY : src/window.o
-
-# target to build an object file
-src/window.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/window.cpp.o
-.PHONY : src/window.cpp.o
-
-src/window.i: src/window.cpp.i
-.PHONY : src/window.i
-
-# target to preprocess a source file
-src/window.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/window.cpp.i
-.PHONY : src/window.cpp.i
-
-src/window.s: src/window.cpp.s
-.PHONY : src/window.s
-
-# target to generate assembly for a file
-src/window.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/src/window.cpp.s
-.PHONY : src/window.cpp.s
-
 src/zombie.o: src/zombie.cpp.o
 .PHONY : src/zombie.o
 
@@ -531,12 +507,12 @@ help:
 	@echo "... src/character.o"
 	@echo "... src/character.i"
 	@echo "... src/character.s"
-	@echo "... src/collisionmanager.o"
-	@echo "... src/collisionmanager.i"
-	@echo "... src/collisionmanager.s"
 	@echo "... src/collisonMap.o"
 	@echo "... src/collisonMap.i"
 	@echo "... src/collisonMap.s"
+	@echo "... src/game.o"
+	@echo "... src/game.i"
+	@echo "... src/game.s"
 	@echo "... src/gameobject.o"
 	@echo "... src/gameobject.i"
 	@echo "... src/gameobject.s"
@@ -564,9 +540,6 @@ help:
 	@echo "... src/weapon.o"
 	@echo "... src/weapon.i"
 	@echo "... src/weapon.s"
-	@echo "... src/window.o"
-	@echo "... src/window.i"
-	@echo "... src/window.s"
 	@echo "... src/zombie.o"
 	@echo "... src/zombie.i"
 	@echo "... src/zombie.s"

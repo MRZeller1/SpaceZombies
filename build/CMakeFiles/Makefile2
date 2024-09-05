@@ -81,12 +81,12 @@ clean: CMakeFiles/SpaceZombies.dir/clean
 CMakeFiles/SpaceZombies.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SpaceZombies.dir/build.make CMakeFiles/SpaceZombies.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Built target SpaceZombies"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 "Built target SpaceZombies"
 .PHONY : CMakeFiles/SpaceZombies.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SpaceZombies.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/SpaceZombies.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles 0
 .PHONY : CMakeFiles/SpaceZombies.dir/rule

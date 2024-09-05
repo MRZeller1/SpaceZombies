@@ -1,43 +1,79 @@
 #ifndef COLLISIONMAP_H
 #define COLLISIONMAP_H
+
 #include <raylib.h>
-#include "grid.h"
-#include <iostream>
 #include <vector>
 #include <unordered_map>
-#include "gameobject.h"
+#include "forward_declarations.h"
+
+
+
 
 class CollisionMap
 {
-    private:
-    std::unordered_map<int, Rectangle*> collisionMap;
-    std::vector<Rectangle*> staticCollisionRectangles;
+private:
+    std::unordered_map<int, Player*> playerMap;
+    std::unordered_map<int, Npc*> npcMap;
+    std::unordered_map<int, Bullet*> bulletMap;
+    std::vector<Rectangle *> staticCollisionRectangles;
+    std::vector<Rectangle *> playerOnlyCollisionRectangles;
     std::vector<int> mapRanges;
-    
+
+    Player *currentPlayer;
+    Npc *currentNpc;
+    Bullet *currentBullet;
+
     int boundsWidth;
     int boundsHeight;
-    public:
+
+public:
     CollisionMap(int boundsWidth, int boundsHeight);
 
-    void addStaticCollisionRectangle(Rectangle* rec);
+    void addStaticCollisionRectangle(Rectangle *rec);
 
-    void addDynamicCollisionRectangle(int id, Rectangle* rec);
-   
-    void updateDynamicCollisionRectangle(int id, Rectangle* rec);
+    void addPlayerCollisionRectangle(int id, Player *player);
 
-    bool checkCollision(const Rectangle& rec1, const Rectangle& rec2);
+    void addNPCCollisionRectangle(int id,  Npc *npc);
 
-    bool checkCollision(const Rectangle& rec1, int ignoreID);
+    void addBulletCollisionRectangle(int id, Bullet *bullet);
+
+
+    void removePlayerCollisionRectangle(int id){ playerMap.erase(id); };
+
+    void removeNPCCollisionRectangle(int id){ npcMap.erase(id); };
+
+    void removeBulletCollisionRectangle(int id){ bulletMap.erase(id); };
+
+    bool checkCollision(const Rectangle &rec1, const Rectangle &rec2);
+
+    // Check collision for a specific type being passed
+
+    bool checkPlayerCollision(const Rectangle &rec1, int ignoreID, Character *player);
+
+    bool checkNPCCollision(const Rectangle &rec1, int ignoreID, Character *npc);
+
+    bool checkBulletCollision(const Rectangle &rec1, int ignoreID, Bullet *bullet);
+
+    // 
+
+    bool isPlayerCollision(const Rectangle &rec1, int ignoreID, bool npc);
+
+    bool isNPCCollision(const Rectangle &rec1, int ignoreID);
+
+    bool isBulletCollision(const Rectangle &rec1, int ignoreID);
+
+    bool isStaticCollision(const Rectangle &rec1);
+
+    void handleBulletCollision(const Rectangle &rec1, int ignoreID);
 
     void setBounds(int width, int height);
-    
-    bool checkBounds(const Rectangle& rec1);
 
-    void updateMapRangesPlayer(int range);
+    bool checkBounds(const Rectangle &rec1);
 
-    void updateMapRangesZombie(int range);
+    void updatePlayerCollisionRectangle(int id, Rectangle *rec);
 
-    void updateMapRangesBug(int range);
+    void updateNPCCollisionRectangle(int id, Rectangle *rec);
 
+    void updateBulletCollisionRectangle(int id, Rectangle *rec);
 };
 #endif

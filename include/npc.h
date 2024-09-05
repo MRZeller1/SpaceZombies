@@ -6,6 +6,7 @@
 const float NPC_DEFAULT_SPEED = 75.0f;
 const int NPC_DEFAULT_HEALTH = 100;
 const int NPC_ANIMATION_SPEED = 15;
+static int collisionID_npcs = 0;
 
 class Npc : public Character
 {
@@ -16,6 +17,8 @@ private:
     float deceleration;
     Vector2 targetDirection;
     float turningSpeed;
+    float damage;
+
 public:
     // Zombie constructor and destructor
     Npc(Grid &grid, CollisionMap &collisionMap);
@@ -28,8 +31,12 @@ public:
     void setNewDirection(Vector2 newDirection);
     void setMovement(float deltaTime);
     void loadTextures();
-    bool isDead() const { return !alive; };
+    void incrementCollisionID() { collisionID_npcs++; };
+    void decrementCollisionID() { collisionID_npcs--; };
+    int getCollisionID() { return collisionID_npcs; };
     float moveTowards(float current, float target, float maxChange);
+    float getDamage() {return damage; };
+    void setDamage(float damage) {this->damage = damage; };
 };
 
 #endif

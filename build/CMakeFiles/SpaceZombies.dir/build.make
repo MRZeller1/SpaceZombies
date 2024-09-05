@@ -111,24 +111,10 @@ CMakeFiles/SpaceZombies.dir/src/character.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/character.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/character.cpp -o CMakeFiles/SpaceZombies.dir/src/character.cpp.s
 
-CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
-CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/collisionmanager.cpp
-CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o: CMakeFiles/SpaceZombies.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o -MF CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o.d -o CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o -c /Users/michaelzeller/Documents/SpaceZombies/src/collisionmanager.cpp
-
-CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/michaelzeller/Documents/SpaceZombies/src/collisionmanager.cpp > CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.i
-
-CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/collisionmanager.cpp -o CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.s
-
 CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
 CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/collisonMap.cpp
 CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o: CMakeFiles/SpaceZombies.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o -MF CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o.d -o CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o -c /Users/michaelzeller/Documents/SpaceZombies/src/collisonMap.cpp
 
 CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.i: cmake_force
@@ -138,6 +124,20 @@ CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.i: cmake_force
 CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/collisonMap.cpp -o CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.s
+
+CMakeFiles/SpaceZombies.dir/src/game.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
+CMakeFiles/SpaceZombies.dir/src/game.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/game.cpp
+CMakeFiles/SpaceZombies.dir/src/game.cpp.o: CMakeFiles/SpaceZombies.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/SpaceZombies.dir/src/game.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceZombies.dir/src/game.cpp.o -MF CMakeFiles/SpaceZombies.dir/src/game.cpp.o.d -o CMakeFiles/SpaceZombies.dir/src/game.cpp.o -c /Users/michaelzeller/Documents/SpaceZombies/src/game.cpp
+
+CMakeFiles/SpaceZombies.dir/src/game.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SpaceZombies.dir/src/game.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/michaelzeller/Documents/SpaceZombies/src/game.cpp > CMakeFiles/SpaceZombies.dir/src/game.cpp.i
+
+CMakeFiles/SpaceZombies.dir/src/game.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/game.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/game.cpp -o CMakeFiles/SpaceZombies.dir/src/game.cpp.s
 
 CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
 CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/gameobject.cpp
@@ -265,24 +265,10 @@ CMakeFiles/SpaceZombies.dir/src/weapon.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/weapon.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/weapon.cpp -o CMakeFiles/SpaceZombies.dir/src/weapon.cpp.s
 
-CMakeFiles/SpaceZombies.dir/src/window.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
-CMakeFiles/SpaceZombies.dir/src/window.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/window.cpp
-CMakeFiles/SpaceZombies.dir/src/window.cpp.o: CMakeFiles/SpaceZombies.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/SpaceZombies.dir/src/window.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceZombies.dir/src/window.cpp.o -MF CMakeFiles/SpaceZombies.dir/src/window.cpp.o.d -o CMakeFiles/SpaceZombies.dir/src/window.cpp.o -c /Users/michaelzeller/Documents/SpaceZombies/src/window.cpp
-
-CMakeFiles/SpaceZombies.dir/src/window.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/SpaceZombies.dir/src/window.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/michaelzeller/Documents/SpaceZombies/src/window.cpp > CMakeFiles/SpaceZombies.dir/src/window.cpp.i
-
-CMakeFiles/SpaceZombies.dir/src/window.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/SpaceZombies.dir/src/window.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/michaelzeller/Documents/SpaceZombies/src/window.cpp -o CMakeFiles/SpaceZombies.dir/src/window.cpp.s
-
 CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o: CMakeFiles/SpaceZombies.dir/flags.make
 CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o: /Users/michaelzeller/Documents/SpaceZombies/src/zombie.cpp
 CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o: CMakeFiles/SpaceZombies.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o -MF CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o.d -o CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o -c /Users/michaelzeller/Documents/SpaceZombies/src/zombie.cpp
 
 CMakeFiles/SpaceZombies.dir/src/zombie.cpp.i: cmake_force
@@ -298,8 +284,8 @@ SpaceZombies_OBJECTS = \
 "CMakeFiles/SpaceZombies.dir/src/bug.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/bullet.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/character.cpp.o" \
-"CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o" \
+"CMakeFiles/SpaceZombies.dir/src/game.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/grid.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/gridNode.cpp.o" \
@@ -309,7 +295,6 @@ SpaceZombies_OBJECTS = \
 "CMakeFiles/SpaceZombies.dir/src/pistols.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/player.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/weapon.cpp.o" \
-"CMakeFiles/SpaceZombies.dir/src/window.cpp.o" \
 "CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o"
 
 # External object files for target SpaceZombies
@@ -318,8 +303,8 @@ SpaceZombies_EXTERNAL_OBJECTS =
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/bug.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/bullet.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/character.cpp.o
-SpaceZombies: CMakeFiles/SpaceZombies.dir/src/collisionmanager.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/collisonMap.cpp.o
+SpaceZombies: CMakeFiles/SpaceZombies.dir/src/game.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/gameobject.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/grid.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/gridNode.cpp.o
@@ -329,12 +314,11 @@ SpaceZombies: CMakeFiles/SpaceZombies.dir/src/pathwayNode.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/pistols.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/player.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/weapon.cpp.o
-SpaceZombies: CMakeFiles/SpaceZombies.dir/src/window.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/src/zombie.cpp.o
 SpaceZombies: CMakeFiles/SpaceZombies.dir/build.make
 SpaceZombies: /Users/michaelzeller/Documents/SpaceZombies/lib/libraylib.a
 SpaceZombies: CMakeFiles/SpaceZombies.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable SpaceZombies"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/michaelzeller/Documents/SpaceZombies/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Linking CXX executable SpaceZombies"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SpaceZombies.dir/link.txt --verbose=$(VERBOSE)
 	/opt/homebrew/Cellar/cmake/3.29.6/bin/cmake -E copy_directory /Users/michaelzeller/Documents/SpaceZombies/resources /Users/michaelzeller/Documents/SpaceZombies/build/resources
 
