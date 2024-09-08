@@ -11,13 +11,13 @@ Npc::Npc(Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap,
     speed = NPC_DEFAULT_SPEED;
     animation = NPC_ANIMATION_SPEED;
 
-    // New variables for momentum-based movement
+    // variables for momentum-based movement
     velocity = {0, 0};
     maxSpeed = NPC_DEFAULT_SPEED;
-    acceleration = 100.0f; // Adjust as needed
-    deceleration = 200.0f; // Adjust as needed
+    acceleration = 100.0f; 
+    deceleration = 200.0f; 
     targetDirection = direction;
-    turningSpeed = 2.0f; // Adjust as needed
+    turningSpeed = 2.0f; 
 }
 
 Npc::~Npc()

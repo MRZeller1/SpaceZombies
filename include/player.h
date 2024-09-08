@@ -32,7 +32,7 @@ private:
     Camera2D camera;
 
 public:
-    Player(Pistols pistols, Grid &grid, CollisionMap &collisionMap);
+    Player(Pistols* pistols, Grid &grid, CollisionMap &collisionMap);
     ~Player();
     // Input for movement
 

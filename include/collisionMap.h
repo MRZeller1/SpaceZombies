@@ -37,7 +37,6 @@ public:
 
     void addBulletCollisionRectangle(int id, Bullet *bullet);
 
-
     void removePlayerCollisionRectangle(int id){ playerMap.erase(id); };
 
     void removeNPCCollisionRectangle(int id){ npcMap.erase(id); };
@@ -51,8 +50,6 @@ public:
     bool checkPlayerCollision(const Rectangle &rec1, int ignoreID, Character *player);
 
     bool checkNPCCollision(const Rectangle &rec1, int ignoreID, Character *npc);
-
-    bool checkBulletCollision(const Rectangle &rec1, int ignoreID, Bullet *bullet);
 
     // 
 

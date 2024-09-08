@@ -76,7 +76,7 @@ void Character::updateAnimation()
             frameCounter = 0;
         }
     }
-};
+}
 void Character::updateGridPosition()
 {
     Vector2 newGridPos = grid.getGridPosition(position.x + movement.x, position.y + movement.y);
@@ -125,4 +125,15 @@ void Character::draw()
 bool Character::collidesWith(const Rectangle &rect)
 {
     return CheckCollisionRecs({position.x - currentTexture.width / 2, position.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height}, rect);
+};
+void Character::takeDamage(float damage)
+{
+    if(!alive) return; 
+    health -= damage; 
+    if(type == PLAYER_TYPE) 
+        std::cout << "Player health: " << health << std::endl; 
+    else
+        std::cout << "Health: " << health << std::endl;;
+    if(health <= 0) 
+        alive = false; 
 };

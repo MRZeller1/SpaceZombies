@@ -13,7 +13,6 @@ class Game
 private:
     int m_width;
     int m_height;
-
     Grid grid;
     CollisionMap collisionMap;
     bool gameStart = false;
@@ -30,14 +29,13 @@ public:
     void addObject(GameObject *object);
     std::vector<GameObject *> getObjects();
     void run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *> &bugs, std::vector<Bullet *> &bullets);
-    void stop();
     void createZombies(std::vector<Zombie *> &zombies);
     void createBugs(std::vector<Bug *> &bugs);
     void updateBullets(std::vector<Bullet*> &bullets, float deltaTime);
     void updateZombies(std::vector<Zombie *> &zombies, float deltaTime);
     void updateBugs(std::vector<Bug *> &bugs, float deltaTime);
 
-
+    void drawHealthBar(Player &player);
     void drawBullets(Player &player);
 
 };

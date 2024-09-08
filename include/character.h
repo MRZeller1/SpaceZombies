@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 
-
 class Character
 {
 protected:
@@ -25,9 +24,9 @@ protected:
     Vector2 position;
     Vector2 direction;
     Vector2 previousDirection;
+    Vector2 lastKnownGridPos;
     Rectangle *collisionBox;
     CollisionMap &collisionMap;
-
     Grid &grid;
     // Waling animation
     bool walk_alt = false;
@@ -35,9 +34,6 @@ protected:
     bool stepping = false;
     bool colliding = false;
     int animation;
-    // Dead
-    // bool dead = true;
-
     int frameCounter = 0;
 
     // Textures
@@ -48,7 +44,7 @@ protected:
     Texture2D rgihtTexture;
     Texture2D rightWalkTexture1;
     Texture2D rightWalkTexture2;
-    Vector2 lastKnownGridPos;
+    
 
 public:
     Character(Grid &grid, CollisionMap &collisionMap, int health = 100, float speed = 5.0f)
@@ -58,22 +54,21 @@ public:
 
     void draw();
     virtual void update(float deltaTime, const std::vector<GameObject *> objects) = 0;
-
+    void updatePosition(float deltaTime, const std::vector<GameObject *> &objects);
     float getX() const { return position.x; }
     float getY() const { return position.y; }
-    void updatePosition(float deltaTime, const std::vector<GameObject *> &objects);
-    void takeDamage(float damage){if(!alive) return; health -= damage; if(health <= 0) alive = false; 
-    if(type == PLAYER_TYPE) std::cout << "Player health: " << health << std::endl; else
-    std::cout << "Health: " << health << std::endl;};
+    void takeDamage(float damage);
     void setPos(float x, float y) { this->position = {x, y}; };
     void setDirection(float x, float y) { this->direction = {x, y}; };
     bool isColliding(const std::vector<GameObject *> objects) { return false; };
     Rectangle getCollisionBox() { return *collisionBox; };
     void updateAnimation();
     void updateGridPosition();
+    int getTextureWidth(){return currentTexture.width;};   
     void setCollisionBox(Rectangle *collisionBox) { this->collisionBox = collisionBox; };
     Vector2 getCellDirection();
     int getCellDistance();
+    int getHealth() { return health; };
     bool collidesWith(const Rectangle &rect);
     bool isDead(){return !alive;};
 };

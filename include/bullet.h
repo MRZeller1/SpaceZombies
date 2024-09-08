@@ -30,7 +30,6 @@ public:
     void setActive(bool active, Vector2 position, Vector2 direction);
     void update(float deltaTime);
     void draw();
-    void checkCollision();
     float getDamage(){ return damage; };
     Rectangle getCollisionBox(){ return *collisionBox;};
     void setCollisionBox(Rectangle *collisionBox){ this->collisionBox = collisionBox;};

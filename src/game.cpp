@@ -39,16 +39,22 @@ void Game::createZombies(std::vector<Zombie *> &zombies)
         aliveZombieCount++;
     }
 }
-void Game::createBugs(std::vector<Bug *> &bugs)
-{
+void Game::createBugs(std::vector<Bug *> &bugs) {
+    const int gridSize = 5;
+    const int bugSize = 4;
+    const int spacing = bugSize + 1; // 1 pixel gap between bugs
 
-    Vector2 position = grid.getRandomUnocupiedPosition();
-    for (int i = 0; i < 5; i++)
-    {
-        for (int j = 0; j < 5; j++)
-        {
-            bugs[i + j]->spawnBug(position.x + i * 5, position.y + j * 5);
-            std::cout << "Bug created!" << std::endl;
+    for (int k = 0; k < 20; k++) { // Create 5 groups of bug grids
+        Vector2 startPosition = grid.getRandomUnocupiedPosition();
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                int index = k * gridSize * gridSize + i * gridSize + j;
+                if (index < bugs.size()) {
+                    float x = startPosition.x + i * spacing;
+                    float y = startPosition.y + j * spacing;
+                    bugs[index]->spawnBug(x, y);
+                }
+            }
         }
     }
 }
@@ -73,9 +79,10 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
         grid.draw();
         if (gameStart == false || aliveZombieCount == 0)
         {
-            createZombies(zombies);
-            // createBugs(bugs);
+            //createZombies(zombies);
+            createBugs(bugs);
             gameStart = true;
+            aliveZombieCount++;
         }
         player.draw();
 
@@ -132,11 +139,17 @@ void Game::updateBugs(std::vector<Bug *> &bugs, float deltaTime)
 {
     for (int i = 0; i < bugs.size(); i++)
     {
-        std::cout << "Bug update " << bugs[i]->isDead() << std::endl;
         if (!bugs[i]->isDead())
         {
             bugs[i]->update(deltaTime, objects);
             bugs[i]->draw();
         }
     }
+}
+
+void Game::drawHealthBar(Player &player)
+{
+    DrawRectangle(player.getX(), player.getY(), 200, 20, BLACK);
+    DrawRectangle(player.getX() - (player.getTextureWidth() / 2), player.getY(), player.getHealth() * 2, 20, GREEN);
+    
 }

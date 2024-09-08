@@ -35,7 +35,8 @@ int main()
         
         Pistols pistols(pistolsBullets);
         // Initialize the player object
-        Player player(pistols, grid, collisionMap);
+        Pistols* poistolPntr = &pistols;
+        Player player(poistolPntr, grid, collisionMap);
         std::vector<Zombie *> zombies;
         std::vector<Bug *> bugs;
         for (int i = 0; i < 5; i++)
@@ -44,7 +45,7 @@ int main()
                 zombies.push_back(zombie);
                 zombieCount++;
         }
-        for (int i = 0; i < 0; i++)
+        for (int i = 0; i < 500; i++)
         {
                 Bug *bug = new Bug(grid, collisionMap);
                 bugs.push_back(bug);
@@ -55,7 +56,6 @@ int main()
         // Game objects
         GameObject *block = new GameObject(300, 250, BLACK, 250.0f, 150.0f, 0, 0, grid, collisionMap);
         GameObject *block1 = new GameObject(0, 0, BLACK, 450.0f, 100.0f, 0, 0, grid, collisionMap);
-
         GameObject *block2 = new GameObject(400, 500, BLACK, 250.0f, 200.0f, 0, 0, grid, collisionMap);
         GameObject *block3 = new GameObject(0, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap);
         GameObject *block4 = new GameObject(650, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap);
@@ -65,7 +65,6 @@ int main()
         // adding objects to the window
         game.addObject(block);
         game.addObject(block1);
-
         game.addObject(block2);
         game.addObject(block3);
         game.addObject(block4);

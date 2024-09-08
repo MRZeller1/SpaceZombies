@@ -5,13 +5,14 @@
 #include "collisionMap.h"
 #include "grid.h"
 
-Player::Player(Pistols pistols, Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED)
+Player::Player(Pistols* pistols, Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED)
 {
     loadTextures();
     type = 1;
     currentTexture = leftTexture;
+    currentWeapon = pistols;
     spawnPlayer(200, 200);
-    this->pistols = &pistols;
+    this->pistols = pistols;
 }
 
 Player::~Player()
@@ -121,7 +122,7 @@ void Player::reloadWeapon()
 }
 void Player::fireWeapon()
 {
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    if (IsMouseButtonPressed(KEY_W))
     {
         currentWeapon->fire(position, direction);
     }
