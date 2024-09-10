@@ -58,16 +58,6 @@ void Npc::setCellAttributes(int startx, int starty)
 
 void Npc::setMovement(float deltaTime)
 {
-    // Comment out the old movement calculation
-    /*
-    if (!colliding)
-        isMoving = true;
-    else
-        isMoving = false;
-
-    movement = {direction.x * speed * deltaTime, direction.y * speed * deltaTime};
-    */
-
     // New momentum-based movement calculation
     Vector2 targetVelocity = {direction.x * maxSpeed, direction.y * maxSpeed};
 

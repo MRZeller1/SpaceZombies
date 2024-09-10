@@ -1,12 +1,13 @@
 #include "bullet.h"
 #include "collisionMap.h"
 
+static int collisionID_bullets = 0;
+
 Bullet::Bullet(int size, float speed, float damage, float lifetime, Grid &grid, CollisionMap &collisionMap) 
     : size(size), speed(speed), damage(damage), lifetime(lifetime), grid(grid), collisionMap(collisionMap) {
     id = collisionID_bullets++;
     active = false;
 }
-
 
 Bullet::~Bullet() {
     if (active) {
@@ -32,6 +33,7 @@ void Bullet::setActive(bool active, Vector2 position, Vector2 direction) {
         collisionMap.removeBulletCollisionRectangle(id);
     }
 }
+
 void Bullet::update(float deltaTime) {
     if (!active)
         return;
@@ -46,21 +48,21 @@ void Bullet::update(float deltaTime) {
         (float)size
     };
 
-    
     collisionBox = &collisionRect;
-    
 
     remainingLifetime -= deltaTime;
     if (remainingLifetime <= 0) {
         deactivate();
     }
 }
+
 void Bullet::draw() {
     if (!active)
         return;
 
     DrawRectangle(position.x - size / 2, position.y - size / 2, size, size, RED);
 }
+
 void Bullet::deactivate() {
     active = false;
     collisionMap.removeBulletCollisionRectangle(id);

@@ -1,6 +1,5 @@
 #include "grid.h"
 
-// constructor
 Grid::Grid(int width, int height, int cellSize)
 {
     // Number of rows and columns dynamically calculated based on the window size and cell siz
@@ -81,7 +80,7 @@ Vector2 Grid::getRandomUnocupiedPosition()
         x = GetRandomValue(0, cols - 1);
         y = GetRandomValue(0, rows - 1);
     }
-    return {static_cast<float>(x) * 50 + 25, static_cast<float>(y) * 50 + 25};
+    return {static_cast<float>(x) * 25, static_cast<float>(y) * 25};
 }
 // get the size of object in cell units
 Vector2 Grid::getObjectGridSize(float objectWidth, float objectHeight)
@@ -102,6 +101,7 @@ int Grid::getCellSize()
 {
     return this->cellSize;
 }
+
 GridNode *Grid::getGridNode(int x, int y)
 {
     return grid[y][x];
@@ -120,7 +120,6 @@ void Grid::resetDistance()
 
 void Grid::updateGridNode(int x, int y, int attribute)
 {
-    // grid[y][x]->update({0, 0});
     grid[y][x]->setAttributes(attribute);
 }
 
@@ -136,3 +135,75 @@ bool Grid::isValidCell(float x, float y)
         return false;
     return true;
 }
+
+void Grid::updateDistances(Vector2 playerPos)
+{
+    std::queue<GridNode*> cellsToCheck;
+    Vector2 gridPos = getGridPosition(playerPos.x, playerPos.y);
+    GridNode* playerNode = grid[gridPos.y][gridPos.x];
+    
+    // Reset distances
+    for (auto& row : grid) {
+        for (auto& cell : row) {
+            cell->setDistance(std::numeric_limits<int>::max());
+        }
+    }
+
+    playerNode->setDistance(0);
+    cellsToCheck.push(playerNode);
+
+    while (!cellsToCheck.empty()) {
+        GridNode* currentNode = cellsToCheck.front();
+        cellsToCheck.pop();
+
+        std::vector<GridNode*> neighbors = {currentNode->getLeft(), currentNode->getRight(), currentNode->getUp(), currentNode->getDown()};
+        for (GridNode* neighbor : neighbors) {
+            if (neighbor && !neighbor->isObjectNode() && neighbor->getDistance() > currentNode->getDistance() + 1) {
+                neighbor->setDistance(currentNode->getDistance() + 1);
+                cellsToCheck.push(neighbor);
+            }
+        }
+    }
+}
+
+void Grid::partialUpdate(Vector2 playerPos, int radius) {
+        std::queue<GridNode*> cellsToCheck;
+        Vector2 gridPos = getGridPosition(playerPos.x, playerPos.y);
+        GridNode* playerNode = grid[gridPos.y][gridPos.x];
+        
+        // Reset distances for all cells within the radius
+        for (int y = std::max(0, (int)gridPos.y - radius); y < std::min(rows, (int)gridPos.y + radius + 1); ++y) {
+            for (int x = std::max(0, (int)gridPos.x - radius); x < std::min(cols, (int)gridPos.x + radius + 1); ++x) {
+                grid[y][x]->resetDistance();
+            }
+        }
+
+        playerNode->setDistance(0);
+        cellsToCheck.push(playerNode);
+
+        while (!cellsToCheck.empty()) {
+            GridNode* currentNode = cellsToCheck.front();
+            cellsToCheck.pop();
+
+            if (currentNode->getDistance() > radius) continue;
+
+            std::vector<GridNode*> neighbors = {
+                currentNode->getLeft(), currentNode->getRight(), currentNode->getUp(), currentNode->getDown(),
+                currentNode->getUpLeft(), currentNode->getUpRight(), currentNode->getDownLeft(), currentNode->getDownRight()
+            };
+
+            for (GridNode* neighbor : neighbors) {
+                if (neighbor && !neighbor->isObjectNode() && neighbor->getDistance() > currentNode->getDistance() + 1) {
+                    neighbor->setDistance(currentNode->getDistance() + 1);
+                    cellsToCheck.push(neighbor);
+                }
+            }
+        }
+
+        // Update directions for affected cells
+        for (int y = std::max(0, (int)gridPos.y - radius); y < std::min(rows, (int)gridPos.y + radius + 1); ++y) {
+            for (int x = std::max(0, (int)gridPos.x - radius); x < std::min(cols, (int)gridPos.x + radius + 1); ++x) {
+                grid[y][x]->setDirection();
+            }
+        }
+    }

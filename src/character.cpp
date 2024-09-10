@@ -10,40 +10,33 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     Rectangle newRectY = {position.x - currentTexture.width / 2, newPos.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height};
 
     bool collisionX = false, collisionY = false;
-    //for (const GameObject *object : objects)
-    
-        // cehckCollision doesnt prevent any collisions between objects or characters
-        // check bounds prevents anyone from moving at all
-        
-        if(type == PLAYER_TYPE){
-            if(collisionMap.checkPlayerCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX)){
-                collisionX = true;
-            }
-            else if(collisionMap.checkPlayerCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY)){
-                collisionY = true;
-            }
-        }
-        if(type == NPC_TYPE){
-            if(collisionMap.checkNPCCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX)){
-                collisionX = true;
-            }
-            else if(collisionMap.checkNPCCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY)){
-                collisionY = true;
-            }
-        }
-        
-        
-        if (collisionX && collisionY)
-            return;
-    
-    if (collisionX || collisionY)
+
+    if (type == PLAYER_TYPE)
     {
-        colliding = true;
+        if (collisionMap.checkPlayerCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX))
+        {
+            collisionX = true;
+        }
+        else if (collisionMap.checkPlayerCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
+        {
+            collisionY = true;
+        }
     }
-    else
+    if (type == NPC_TYPE)
     {
-        colliding = false;
+        if (collisionMap.checkNPCCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX))
+        {
+            collisionX = true;
+        }
+        else if (collisionMap.checkNPCCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
+        {
+            collisionY = true;
+        }
     }
+
+    if (collisionX && collisionY)
+        return;
+
     if (!collisionX)
         position.x += movement.x;
     if (!collisionY)
@@ -53,9 +46,8 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     collisionBox->y = position.y - currentTexture.height / 2;
     collisionBox->width = (float)currentTexture.width;
     collisionBox->height = (float)currentTexture.height;
-   
 }
-// update animation will be here
+
 void Character::updateAnimation()
 {
     if (isMoving)
@@ -63,77 +55,62 @@ void Character::updateAnimation()
         frameCounter++;
         if (frameCounter >= animation)
         {
-            if (!stepping)
-            {
-                currentTexture = (walk_alt ? leftWalkTexture1 : leftWalkTexture2);
-                walk_alt = !walk_alt;
-            }
-            else
-            {
-                currentTexture = leftTexture;
-            }
-            stepping = !stepping;
+            currentTexture = (walk_alt ? leftWalkTexture1 : leftWalkTexture2);
+            walk_alt = !walk_alt;
             frameCounter = 0;
         }
     }
 }
+
 void Character::updateGridPosition()
 {
     Vector2 newGridPos = grid.getGridPosition(position.x + movement.x, position.y + movement.y);
 
-    // Only update if the current grid position is different from the last known position
     if (newGridPos.x != lastKnownGridPos.x || newGridPos.y != lastKnownGridPos.y)
     {
-        // Clear the old position
         if (grid.isValidCell(lastKnownGridPos.x, lastKnownGridPos.y) && grid.getGridNode(lastKnownGridPos.x, lastKnownGridPos.y))
         {
             grid.getGridNode(lastKnownGridPos.x, lastKnownGridPos.y)->setAttributes(0);
         }
 
-        // Set the new position
         if (grid.isValidCell(newGridPos.x, newGridPos.y) && grid.getGridNode(newGridPos.x, newGridPos.y))
         {
-            if (type == 1)
-                grid.resetDistance();
             grid.getGridNode(newGridPos.x, newGridPos.y)->setAttributes(type);
-            if (type == 1)
-                grid.getGridNode(newGridPos.x, newGridPos.y)->update();
         }
 
-        // Update the last known position
         lastKnownGridPos = newGridPos;
     }
-};
+}
 
 Vector2 Character::getCellDirection()
 {
     Vector2 gridPos = grid.getGridPosition(position.x, position.y);
     return grid.getGridNode(gridPos.x, gridPos.y)->getDirection();
 }
+
 int Character::getCellDistance()
 {
     Vector2 gridPos = grid.getGridPosition(position.x, position.y);
     return grid.getGridNode(gridPos.x, gridPos.y)->getDistance();
 }
-// draw
+
 void Character::draw()
 {
     DrawTexture(currentTexture, (int)position.x - currentTexture.width / 2, (int)position.y - currentTexture.height / 2, WHITE);
-};
+}
 
-// collides with
 bool Character::collidesWith(const Rectangle &rect)
 {
     return CheckCollisionRecs({position.x - currentTexture.width / 2, position.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height}, rect);
-};
+}
+
 void Character::takeDamage(float damage)
 {
-    if(!alive) return; 
-    health -= damage; 
-    if(type == PLAYER_TYPE) 
-        std::cout << "Player health: " << health << std::endl; 
-    else
-        std::cout << "Health: " << health << std::endl;;
-    if(health <= 0) 
-        alive = false; 
-};
+    if (!alive) return;
+    health -= damage;
+
+    std::cout << (type == PLAYER_TYPE ? "Player health: " : "Health: ") << health << std::endl;
+
+    if (health <= 0)
+        alive = false;
+}

@@ -12,7 +12,6 @@ class Zombie : public Npc
 {
 private:
 public:
-    // Zombie constructor and destructor
     Zombie(Grid &grid, CollisionMap &collisionMap);
     ~Zombie();
     void loadTextures();

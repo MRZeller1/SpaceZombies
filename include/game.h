@@ -20,7 +20,9 @@ private:
     int zombieCount = 1;
     int aliveZombieCount = 0;
     bool gameOver;
-    int score;
+    float score;
+    float finalScore;
+    float lastScoreUpdate;
     std::vector<GameObject *> objects;
 
 public:
@@ -34,9 +36,13 @@ public:
     void updateBullets(std::vector<Bullet*> &bullets, float deltaTime);
     void updateZombies(std::vector<Zombie *> &zombies, float deltaTime);
     void updateBugs(std::vector<Bug *> &bugs, float deltaTime);
-
-    void drawHealthBar(Player &player);
     void drawBullets(Player &player);
+    void drawHealthBar(const Player &player);
+    void drawGameOverBanner(Player &player);
+    void updateScore(float deltaTime);
+    float getScore() const { return score; }
+    void drawScore();
+    
 
 };
 

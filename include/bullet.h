@@ -4,23 +4,20 @@
 #include "forward_declarations.h"
 #include "raylib.h"
 
-static int collisionID_bullets = 0;
-
 class Bullet
 {
 private:
+    // Bullet properties
     int size;
     float speed;
     float damage;
-    float x;
-    float y;
-    int id;
-    Vector2 direction;
     float lifetime;
-    bool active;
     float remainingLifetime;
+    int id;
+    bool active;
     Rectangle *collisionBox;
     Vector2 position;
+    Vector2 direction;
     Grid &grid;
     CollisionMap &collisionMap;
 
@@ -30,10 +27,11 @@ public:
     void setActive(bool active, Vector2 position, Vector2 direction);
     void update(float deltaTime);
     void draw();
-    float getDamage(){ return damage; };
-    Rectangle getCollisionBox(){ return *collisionBox;};
-    void setCollisionBox(Rectangle *collisionBox){ this->collisionBox = collisionBox;};
-    bool isActive() { return active; };
     void deactivate();
+    float getDamage() { return damage; };
+    Rectangle getCollisionBox() { return *collisionBox; };
+    void setCollisionBox(Rectangle *collisionBox) { this->collisionBox = collisionBox; };
+    bool isActive() { return active; };
 };
-#endif // BULLET_H
+
+#endif 

@@ -28,6 +28,8 @@ private:
 
 public:
     CollisionMap(int boundsWidth, int boundsHeight);
+    
+    //Add dynamic collision rectangles
 
     void addStaticCollisionRectangle(Rectangle *rec);
 
@@ -36,6 +38,8 @@ public:
     void addNPCCollisionRectangle(int id,  Npc *npc);
 
     void addBulletCollisionRectangle(int id, Bullet *bullet);
+    
+    //Remove dynamic collion rectangles
 
     void removePlayerCollisionRectangle(int id){ playerMap.erase(id); };
 
@@ -43,15 +47,15 @@ public:
 
     void removeBulletCollisionRectangle(int id){ bulletMap.erase(id); };
 
-    bool checkCollision(const Rectangle &rec1, const Rectangle &rec2);
+    //Check for collision between two rectangles
 
-    // Check collision for a specific type being passed
+    bool checkCollision(const Rectangle &rec1, const Rectangle &rec2);
 
     bool checkPlayerCollision(const Rectangle &rec1, int ignoreID, Character *player);
 
     bool checkNPCCollision(const Rectangle &rec1, int ignoreID, Character *npc);
 
-    // 
+    //Check for collision between a rectangle and a list of rectangles
 
     bool isPlayerCollision(const Rectangle &rec1, int ignoreID, bool npc);
 
@@ -66,6 +70,8 @@ public:
     void setBounds(int width, int height);
 
     bool checkBounds(const Rectangle &rec1);
+
+    //Update the collision rectangle of a dynamic object
 
     void updatePlayerCollisionRectangle(int id, Rectangle *rec);
 

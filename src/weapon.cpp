@@ -51,7 +51,6 @@ void Weapon::fire(Vector2 position, Vector2 direction)
 }
 void Weapon::reload()
 { // reload timer
-
     reloading = true;
     timeSinceReload = 0;
     ammo -= magazineSize - bulletsInMagazine;

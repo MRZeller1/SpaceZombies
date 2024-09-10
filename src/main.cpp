@@ -12,71 +12,95 @@
 #include <vector>
 #include <raylib.h>
 
+void addZombies(std::vector<Zombie *> &zombies, Grid &grid, CollisionMap &collisionMap, int count);
+void addBugs(std::vector<Bug *> &bugs, Grid &grid, CollisionMap &collisionMap, int count);
+void addBullets(std::vector<Bullet *> &bullets, Grid &grid, CollisionMap &collisionMap, int count);
+
 int main()
 {
-        // Window dimensions
-        const int width = 800;
-        const int height = 500;
-        // Initialize of the grid with map dimensions and cell size
-        Grid grid(width, height, 50);
-        CollisionMap collisionMap(4000, 4000);
-        // Initialize the window with the grid and title
-        Game game(1000, 1000, grid, collisionMap, "Space Zombies!!!");
-        SetTargetFPS(60);
-        std::vector<Bullet *> pistolsBullets;
-        std::vector<Bullet *> rifleBullets;
-        std::vector<Bullet *> flamethrowerBullets;
+        const int screenWidth = GetScreenWidth();
+        const int screenHeight = GetScreenHeight();
 
-        for (int i = 0; i < 40; i++)
-        {
-                Bullet *bullet = new Bullet(2, 50, 10, 100, grid, collisionMap);
-                pistolsBullets.push_back(bullet);
-        }
-        
+        int windowWidth = screenWidth * .9;
+        int windowHeight = screenHeight * .9;
+
+
+        // Grid dimensions
+        const int width = 3025;
+        const int height = 3025;
+        // Initialize of the grid with map dimensions and cell size
+        Grid grid(width, height, 25);
+        CollisionMap collisionMap(3000, 3000);
+        // Initialize the window with the grid and title
+        Game game(windowWidth, windowHeight, grid, collisionMap, "Space Zombies!!!");
+        SetTargetFPS(60);
+        // Create bullets for pistols
+        std::vector<Bullet *> pistolsBullets;
+        addBullets(pistolsBullets, grid, collisionMap, 100);
         Pistols pistols(pistolsBullets);
-        // Initialize the player object
+        // Initialize the players and NPCs
         Pistols* poistolPntr = &pistols;
         Player player(poistolPntr, grid, collisionMap);
         std::vector<Zombie *> zombies;
         std::vector<Bug *> bugs;
-        for (int i = 0; i < 5; i++)
-        {
-                Zombie *zombie = new Zombie(grid, collisionMap);
-                zombies.push_back(zombie);
-                zombieCount++;
-        }
-        for (int i = 0; i < 500; i++)
-        {
-                Bug *bug = new Bug(grid, collisionMap);
-                bugs.push_back(bug);
-                bugCount++;
-        }
-        std::cout << "Zombie count: " << zombies.size() << std::endl;
+        addZombies(zombies, grid, collisionMap, 100);
+        addBugs(bugs, grid, collisionMap, 540);
 
         // Game objects
-        GameObject *block = new GameObject(300, 250, BLACK, 250.0f, 150.0f, 0, 0, grid, collisionMap);
-        GameObject *block1 = new GameObject(0, 0, BLACK, 450.0f, 100.0f, 0, 0, grid, collisionMap);
-        GameObject *block2 = new GameObject(400, 500, BLACK, 250.0f, 200.0f, 0, 0, grid, collisionMap);
-        GameObject *block3 = new GameObject(0, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap);
-        GameObject *block4 = new GameObject(650, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap);
-        GameObject *block5 = new GameObject(800, 100, BLACK, 200.0f, 300.0f, 0, 0, grid, collisionMap);
-        GameObject *block6 = new GameObject(600, 100, BLACK, 100.0f, 50.0f, 0, 0, grid, collisionMap);
+        game.addObject(new GameObject(300, 250, BLACK, 250.0f, 150.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(0, 0, BLACK, 450.0f, 100.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(400, 500, BLACK, 250.0f, 200.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(0, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(650, 500, BLACK, 300.0f, 200.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(800, 100, BLACK, 200.0f, 300.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(600, 100, BLACK, 100.0f, 50.0f, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(0, 0, BLACK, 3000, 25, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(0, 0, BLACK, 25, 3000, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(3000, 0, BLACK, 25, 3000, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(0, 3000, BLACK, 3000, 25, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(2200, 500, BLACK, 300, 50, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(2450, 500, BLACK, 50, 300, 0, 0, grid, collisionMap));
 
-        // adding objects to the window
-        game.addObject(block);
-        game.addObject(block1);
-        game.addObject(block2);
-        game.addObject(block3);
-        game.addObject(block4);
-        game.addObject(block5);
-        game.addObject(block6);
+        game.addObject(new GameObject(500, 2200, BLACK, 300, 50, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(500, 1950, BLACK, 50, 300, 0, 0, grid, collisionMap));
 
-        // initialize the grid distances/directions
-        // grid.getGridNode(200, 200)->setAttributes(1);
-        // grid.getGridNode(200, 200)->update();
+        game.addObject(new GameObject(2200, 2450, BLACK, 300, 50, 0, 0, grid, collisionMap));
+        game.addObject(new GameObject(2450, 2200, BLACK, 50, 300, 0, 0, grid, collisionMap));
+        for (int i = 0; i < 4; i++) {
+                game.addObject(new GameObject(800 + i * 425, 1500, BLACK, 75, 75, 0, 0, grid, collisionMap));
+        }
+        for (int i = 0; i < 4; i++) {
+                game.addObject(new GameObject(1500, 800 + i * 425, BLACK, 75, 75, 0, 0, grid, collisionMap));
+        }
 
         // run the game
         game.run(player, zombies, bugs, pistolsBullets);
 
         return 0;
+}
+void addZombies(std::vector<Zombie *> &zombies, Grid &grid, CollisionMap &collisionMap, int count)
+{
+        for (int i = 0; i < count; i++)
+        {
+                Zombie *zombie = new Zombie(grid, collisionMap);
+                zombies.push_back(zombie);
+                zombieCount++;
+        }
+}
+void addBugs(std::vector<Bug *> &bugs, Grid &grid, CollisionMap &collisionMap, int count)
+{
+        for (int i = 0; i < count; i++)
+        {
+                Bug *bug = new Bug(grid, collisionMap);
+                bugs.push_back(bug);
+                bugCount++;
+        }
+}
+void addBullets(std::vector<Bullet *> &bullets, Grid &grid, CollisionMap &collisionMap, int count)
+{
+        for (int i = 0; i < count; i++)
+        {
+                Bullet *bullet = new Bullet(2, 50, 10, 100, grid, collisionMap);
+                bullets.push_back(bullet);
+        }
 }

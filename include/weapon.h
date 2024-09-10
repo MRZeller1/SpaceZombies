@@ -27,7 +27,6 @@ protected:
     bool activeWeapon;
     int magazineSize;
     int bulletsInMagazine;
-
     int bulletSize;
     int bulletSpeed;
     int bulletDamage;

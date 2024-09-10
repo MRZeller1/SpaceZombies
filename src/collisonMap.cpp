@@ -3,10 +3,6 @@
 #include "player.h"
 #include "bullet.h"
 #include <iostream>
-//Player collision id is 1000
-//Zombie collision id is 2000
-//Bug collision id is 3000
-//Bullet colision id is 5000
 
 CollisionMap::CollisionMap(int boundsWidth, int boundsHeight)
 {
@@ -60,8 +56,6 @@ bool CollisionMap::checkPlayerCollision(const Rectangle &rec1, int ignoreID, Cha
 
     return false;
 }
-
-
 
 bool CollisionMap::checkNPCCollision(const Rectangle &rec1, int ignoreID, Character* npc)
 {
@@ -156,10 +150,6 @@ bool CollisionMap::checkCollision(const Rectangle &rec1, const Rectangle &rec2)
 {
     return CheckCollisionRecs(rec1, rec2);
 }
-
-
-
-
 
 bool CollisionMap::isStaticCollision(const Rectangle &rec1)
 {

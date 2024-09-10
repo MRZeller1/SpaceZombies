@@ -23,7 +23,6 @@ void Bug::spawnBug(float startx, float starty)
 
     setPos(startx, starty);
     Vector2 gridPos = grid.getGridPosition(startx, starty);
-    //grid.setCellAttributes(gridPos.x, gridPos.y, NPC_TYPE);
     setCellAttributes(startx, starty);
     collisionBox = new Rectangle{position.x - currentTexture.width / 2, position.y - currentTexture.height / 2, (float)currentTexture.width, (float)currentTexture.height};
     incrementCollisionID();

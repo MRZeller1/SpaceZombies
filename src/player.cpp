@@ -1,6 +1,4 @@
-
 #include "player.h"
-
 #include "pistols.h"
 #include "collisionMap.h"
 #include "grid.h"
@@ -146,6 +144,17 @@ void Player::loadTextures()
     {
         std::cerr << "Error loading player textures" << std::endl;
         exit(1);
+    }
+}
+void Player::updateGridPosition()
+{
+    Vector2 newGridPos = grid.getGridPosition(position.x, position.y);
+    if (newGridPos.x != gridPos.x || newGridPos.y != gridPos.y)
+    {
+        grid.partialUpdate(position, UPDATE_RADIUS);
+        grid.setCellAttributes(gridPos.x, gridPos.y, 0);
+        grid.setCellAttributes(newGridPos.x, newGridPos.y, 1);
+        gridPos = newGridPos;
     }
 }
 
