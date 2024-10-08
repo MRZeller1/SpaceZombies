@@ -1,5 +1,6 @@
 #include "grid.h"
 
+// constructor for the grid         
 Grid::Grid(int width, int height, int cellSize)
 {
     // Number of rows and columns dynamically calculated based on the window size and cell siz
@@ -34,6 +35,7 @@ void Grid::draw() const
         }
     }
 }
+// initialize the grid
 void Grid::initGrid()
 {
     // Step 1: Create all nodes
@@ -71,6 +73,7 @@ Vector2 Grid::getGridPosition(float x, float y)
     float gridY = floor((y / this->cellSize));
     return {gridX, gridY};
 }
+// get a random unoccupied position
 Vector2 Grid::getRandomUnocupiedPosition()
 {
     int x = GetRandomValue(0, cols - 1);

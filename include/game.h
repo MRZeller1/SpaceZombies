@@ -11,6 +11,7 @@
 class Game
 {
 private:
+    // Window dimensions
     int m_width;
     int m_height;
     Grid grid;
