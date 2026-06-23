@@ -1,4 +1,5 @@
 #include "zombie.h"
+#include "textures.h"
 #include "collisionMap.h"
 #include "grid.h"
 
@@ -13,9 +14,9 @@ Zombie::Zombie(Grid &grid, CollisionMap &collisionMap) : Npc(grid, collisionMap)
 
 void Zombie::loadTextures()
 {
-    leftTexture = LoadTexture("resources/zombie.png");
-    leftWalkTexture1 = LoadTexture("resources/zombie_walk1.png");
-    leftWalkTexture2 = LoadTexture("resources/zombie_walk2.png");
+    leftTexture = GameTextures::Zombie();
+    leftWalkTexture1 = GameTextures::ZombieWalk1();
+    leftWalkTexture2 = GameTextures::ZombieWalk2();
 }
 void Zombie::spawnZombie(float startx, float starty)
 

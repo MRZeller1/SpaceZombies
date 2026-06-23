@@ -10,6 +10,7 @@ static int bugCount = 0;
 
 float const BUG_DEFAULT_SPEED = 75.0f;
 float const BUG_DAMAGE = 5.0f;
+const int BUG_HEALTH = 50;
 class Bug : public Npc
 {
 private:

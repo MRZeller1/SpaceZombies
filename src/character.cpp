@@ -14,24 +14,16 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     if (type == PLAYER_TYPE)
     {
         if (collisionMap.checkPlayerCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX))
-        {
             collisionX = true;
-        }
-        else if (collisionMap.checkPlayerCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
-        {
+        if (collisionMap.checkPlayerCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
             collisionY = true;
-        }
     }
     if (type == NPC_TYPE)
     {
         if (collisionMap.checkNPCCollision(newRectX, personalCollisionID, this) || collisionMap.checkBounds(newRectX))
-        {
             collisionX = true;
-        }
-        else if (collisionMap.checkNPCCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
-        {
+        if (collisionMap.checkNPCCollision(newRectY, personalCollisionID, this) || collisionMap.checkBounds(newRectY))
             collisionY = true;
-        }
     }
 
     if (collisionX && collisionY)
@@ -42,6 +34,10 @@ void Character::updatePosition(float deltaTime, const std::vector<GameObject *> 
     if (!collisionY)
         position.y += movement.y;
 
+    collisionMap.clampToBounds((float)currentTexture.width, (float)currentTexture.height, position.x, position.y);
+
+    if (!collisionBox)
+        return;
     collisionBox->x = position.x - currentTexture.width / 2;
     collisionBox->y = position.y - currentTexture.height / 2;
     collisionBox->width = (float)currentTexture.width;
@@ -85,13 +81,25 @@ void Character::updateGridPosition()
 Vector2 Character::getCellDirection()
 {
     Vector2 gridPos = grid.getGridPosition(position.x, position.y);
-    return grid.getGridNode(gridPos.x, gridPos.y)->getDirection();
+    if (!grid.isValidCell(gridPos.x, gridPos.y))
+        return {0, 0};
+
+    GridNode *node = grid.getGridNode((int)gridPos.x, (int)gridPos.y);
+    if (!node)
+        return {0, 0};
+    return node->getDirection();
 }
 
 int Character::getCellDistance()
 {
     Vector2 gridPos = grid.getGridPosition(position.x, position.y);
-    return grid.getGridNode(gridPos.x, gridPos.y)->getDistance();
+    if (!grid.isValidCell(gridPos.x, gridPos.y))
+        return 100;
+
+    GridNode *node = grid.getGridNode((int)gridPos.x, (int)gridPos.y);
+    if (!node)
+        return 100;
+    return node->getDistance();
 }
 
 void Character::draw()
@@ -112,5 +120,9 @@ void Character::takeDamage(float damage)
     std::cout << (type == PLAYER_TYPE ? "Player health: " : "Health: ") << health << std::endl;
 
     if (health <= 0)
+    {
         alive = false;
+        if (type == NPC_TYPE)
+            collisionMap.removeNPCCollisionRectangle(personalCollisionID);
+    }
 }

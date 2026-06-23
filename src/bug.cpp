@@ -1,4 +1,5 @@
 #include "bug.h"
+#include "textures.h"
 #include "grid.h"
 #include "collisionMap.h"
 
@@ -7,15 +8,16 @@ Bug::Bug(Grid &grid, CollisionMap &collisionMap) : Npc(grid, collisionMap)
     loadTextures();
     currentTexture = leftTexture;
     alive = false;
+    health = BUG_HEALTH;
     setDamage(BUG_DAMAGE);
     incrementBugCount();
 }
 
 void Bug::loadTextures()
 {
-    leftTexture = LoadTexture("resources/bug.png");
-    leftWalkTexture1 = LoadTexture("resources/bug.png");
-    leftWalkTexture2 = LoadTexture("resources/bug.png");
+    leftTexture = GameTextures::Bug();
+    leftWalkTexture1 = leftTexture;
+    leftWalkTexture2 = leftTexture;
 }
 
 void Bug::spawnBug(float startx, float starty)
@@ -30,6 +32,7 @@ void Bug::spawnBug(float startx, float starty)
     collisionMap.addNPCCollisionRectangle(personalCollisionID, this);
 
     alive = true;
+    health = BUG_HEALTH;
 }
 
 void Bug::incrementBugCount()

@@ -11,6 +11,5 @@ class Bug;
 class Bullet;
 class Weapon;
 class Zombie;
-class Pistols;
 
 #endif // FORWARD_DECLARATIONS_H

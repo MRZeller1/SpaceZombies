@@ -3,7 +3,6 @@
 
 GridNode::GridNode(Vector2 position, int cellSize)
 {
-    std::cout << "GridNode constructor called" << std::endl;
     this->color = WHITE;
     this->position = position;
     this->cellSize = cellSize;
@@ -11,6 +10,8 @@ GridNode::GridNode(Vector2 position, int cellSize)
     this->isObject = false;
     this->direction = {0, 0};
     this->distance = 100;
+    up = down = left = right = nullptr;
+    upLeft = upRight = downLeft = downRight = nullptr;
 }
 
 std::string GridNode::toString()

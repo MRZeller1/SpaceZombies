@@ -1,16 +1,16 @@
 #include "player.h"
-#include "pistols.h"
 #include "collisionMap.h"
 #include "grid.h"
 
-Player::Player(Pistols* pistols, Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED)
+Player::Player(std::vector<Weapon *> &weapons, Grid &grid, CollisionMap &collisionMap)
+    : Character(grid, collisionMap, DEFAULT_PLAYER_HEALTH, DEFAULT_PLAYER_SPEED),
+      weapons(weapons)
 {
     loadTextures();
     type = 1;
     currentTexture = leftTexture;
-    currentWeapon = pistols;
+    currentWeapon = weapons.empty() ? nullptr : weapons[0];
     spawnPlayer(200, 200);
-    this->pistols = pistols;
 }
 
 Player::~Player()
@@ -20,17 +20,21 @@ Player::~Player()
     UnloadTexture(leftWalkTexture2);
 }
 
-
 void Player::update(float deltaTime, const std::vector<GameObject *> objects)
 {
-    if(!alive) return;
+    if (!alive)
+        return;
     handleMovementInput(deltaTime);
     updatePosition(deltaTime, objects);
     updateGridPosition();
     handleSprinting(deltaTime);
     updateAnimation();
-    reloadWeapon();
-    fireWeapon();
+    if (currentWeapon)
+    {
+        currentWeapon->update(deltaTime);
+        reloadWeapon();
+        fireWeapon();
+    }
     changeWeapon();
     updateCamera();
 }
@@ -42,25 +46,25 @@ void Player::handleMovementInput(float deltaTime)
     speed = isSprinting ? DEFAULT_PLAYER_SPEED * 2.0f : DEFAULT_PLAYER_SPEED;
     animation = isSprinting ? ANIMATION_PLAYER_SPEED * 3 / 4 : ANIMATION_PLAYER_SPEED;
 
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_D))
     {
         movement.x = speed * deltaTime;
         direction = {1, 0};
         isMoving = true;
     }
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_A))
     {
         movement.x -= speed * deltaTime;
         direction = {-1, 0};
         isMoving = true;
     }
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_W))
     {
         movement.y -= speed * deltaTime;
         direction = {0, 1};
         isMoving = true;
     }
-    if (IsKeyDown(KEY_DOWN))
+    if (IsKeyDown(KEY_S))
     {
         movement.y += speed * deltaTime;
         direction = {0, -1};
@@ -72,7 +76,6 @@ void Player::handleSprinting(float deltaTime)
 {
     if (IsKeyDown(KEY_F) && sptrintcooldownTimer <= 0.0f)
     {
-        std::cout << "Sprinting started\n";
         isSprinting = true;
         sprintTimer = sprintDuration;
         sptrintcooldownTimer = sprintCooldown;
@@ -82,17 +85,11 @@ void Player::handleSprinting(float deltaTime)
     {
         sprintTimer -= deltaTime;
         if (sprintTimer <= 0.0f)
-        {
             isSprinting = false;
-            std::cout << "Sprinting ended\n";
-        }
     }
 
     if (sptrintcooldownTimer > 0.0f)
-    {
-
         sptrintcooldownTimer -= deltaTime;
-    }
 }
 
 void Player::spawnPlayer(float startx, float starty)
@@ -111,28 +108,34 @@ void Player::spawnPlayer(float startx, float starty)
     camera.zoom = 2.25f;
     alive = true;
 }
+
 void Player::reloadWeapon()
 {
-    if (IsKeyPressed(KEY_R))
-    {
+    if (IsKeyPressed(KEY_R) && currentWeapon)
         currentWeapon->reload();
-    }
 }
+
 void Player::fireWeapon()
 {
-    if (IsMouseButtonPressed(KEY_W))
-    {
+    if (!currentWeapon)
+        return;
+
+    bool fireInput = IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(KEY_SPACE);
+    bool holdInput = IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsKeyDown(KEY_SPACE);
+
+    bool shouldFire = currentWeapon->isAutomatic() ? holdInput : fireInput;
+
+    if (shouldFire)
         currentWeapon->fire(position, direction);
-    }
 }
+
 void Player::changeWeapon()
 {
-    if (IsKeyPressed(KEY_A))
-    {
-        currentWeapon->setActiveWeapon(false);
-        currentWeapon = pistols;
-        currentWeapon->setActiveWeapon(true);
-    }
+    if (!IsKeyPressed(KEY_Q) || weapons.size() <= 1)
+        return;
+
+    currentWeaponIndex = (currentWeaponIndex + 1) % static_cast<int>(weapons.size());
+    currentWeapon = weapons[currentWeaponIndex];
 }
 
 void Player::loadTextures()
@@ -146,6 +149,7 @@ void Player::loadTextures()
         exit(1);
     }
 }
+
 void Player::updateGridPosition()
 {
     Vector2 newGridPos = grid.getGridPosition(position.x, position.y);

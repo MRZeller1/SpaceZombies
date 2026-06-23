@@ -3,6 +3,8 @@
 #include <forward_declarations.h>
 #include <raylib.h>
 #include "character.h"
+#include "weapon.h"
+#include <vector>
 
 const float DEFAULT_PLAYER_SPEED = 150.0f;
 const int DEFAULT_PLAYER_HEALTH = 100;
@@ -11,23 +13,21 @@ const int UPDATE_RADIUS = 50;
 const float sprintDuration = 2.5f;
 static int collisionID_players = 0;
 
-
-
 class Player : public Character
 {
 private:
-
     bool isSprinting = false;
     float sptrintcooldownTimer = 0.0;
     float sprintTimer = 0.0f;
     const float sprintCooldown = 30.0f;
-    Pistols *pistols;
+    std::vector<Weapon *> weapons;
+    int currentWeaponIndex = 0;
     Weapon *currentWeapon;
 
     Camera2D camera;
 
 public:
-    Player(Pistols* pistols, Grid &grid, CollisionMap &collisionMap);
+    Player(std::vector<Weapon *> &weapons, Grid &grid, CollisionMap &collisionMap);
     ~Player();
     void update(float deltaTime, const std::vector<GameObject *> objects) override;
     void handleMovementInput(float deltaTime);
@@ -41,7 +41,8 @@ public:
     int getX(){return gridPos.x;}
     int getY(){return gridPos.y;}
     Vector2 getPosition(){return position;}
-    Weapon *getWeapon() const{ return currentWeapon; }
+    Vector2 getDirection() const { return direction; }
+    Weapon *getWeapon() const { return currentWeapon; }
     Camera2D getCamera() const {return camera;}
     void updateCamera();
     void loadTextures();

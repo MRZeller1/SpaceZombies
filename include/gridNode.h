@@ -39,6 +39,10 @@ public:
     void setRight(GridNode *right) { this->right = right; }
     void setUp(GridNode *up) { this->up = up; }
     void setDown(GridNode *down) { this->down = down; }
+    void setUpLeft(GridNode *node) { this->upLeft = node; }
+    void setUpRight(GridNode *node) { this->upRight = node; }
+    void setDownLeft(GridNode *node) { this->downLeft = node; }
+    void setDownRight(GridNode *node) { this->downRight = node; }
     void resetDistance() {this->distance = 10000; } // Use the minDistance constant you've defined
     void setLeftAttribute(int type);
     void setRightAttribute(int type);

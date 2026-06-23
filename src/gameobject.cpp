@@ -4,7 +4,7 @@
 #include "grid.h"
 #include "collisionMap.h"
 
-GameObject::GameObject(float startx, float starty, Color color, float width, float height, float offsetX, float offsetY, Grid &grid, CollisionMap &collisionMap) : x(startx), y(starty), color(color), grid(grid), collisionMap(collisionMap)
+GameObject::GameObject(float startx, float starty, Color color, float width, float height, float offsetX, float offsetY, Grid &grid, CollisionMap &collisionMap) : x(startx), y(starty), color(color), grid(grid), collisionMap(collisionMap), texture{0}
 {
     Vector2 alignedPos = grid.getGridPosition(x, y);
     Vector2 alignedSize = grid.getObjectGridSize(width, height);
@@ -25,7 +25,8 @@ bool GameObject::hasTexture()
 
 GameObject::~GameObject()
 {
-    UnloadTexture(texture);
+    if (texture.id != 0)
+        UnloadTexture(texture);
 }
 
 void GameObject::draw()

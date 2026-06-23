@@ -7,6 +7,7 @@
 #include "collisionMap.h"
 #include "grid.h"
 #include "gameobject.h"
+#include "weapon.h"
 
 Game::Game(int width, int height, const Grid &grid, CollisionMap &collisionMap, const char *title)
     : m_width(width), m_height(height), grid(grid), collisionMap(collisionMap), m_title(title), score(0), lastScoreUpdate(0)
@@ -37,32 +38,59 @@ std::vector<GameObject *> Game::getObjects()
 {
     return objects;
 }
-void Game::createZombies(std::vector<Zombie *> &zombies)
+void Game::createZombies(std::vector<Zombie *> &zombies, Vector2 playerPos)
 {
-    for (int i = 0; i < Zombie::getZombieCount(); i++)
+    const float minSpawnDistance = 450.0f;
+    aliveZombieCount = 0;
+
+    for (size_t i = 0; i < zombies.size(); i++)
     {
-        Vector2 position = grid.getRandomUnocupiedPosition();
-        position.x += 12;
-        position.y += 12;
+        if (zombies[i] == nullptr)
+            continue;
+
+        if (!zombies[i]->isDead())
+        {
+            aliveZombieCount++;
+            continue;
+        }
+
+        Vector2 position = grid.getSpawnPositionAwayFrom(playerPos.x, playerPos.y, minSpawnDistance);
         zombies[i]->spawnZombie(position.x, position.y);
         aliveZombieCount++;
     }
 }
-void Game::createBugs(std::vector<Bug *> &bugs) {
-    const int gridSize = 3;
-    const int bugSize = 4;
-    const int spacing = bugSize + 1; // 1 pixel gap between bugs
 
-    for (int k = 0; k < 60; k++) { // Create 5 groups of bug grids
-        Vector2 startPosition = grid.getRandomUnocupiedPosition();
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                int index = k * gridSize * gridSize + i * gridSize + j;
-                if (index < bugs.size()) {
-                    float x = startPosition.x + i * spacing;
-                    float y = startPosition.y + j * spacing;
-                    bugs[index]->spawnBug(x, y);
-                }
+void Game::createBugs(std::vector<Bug *> &bugs, Vector2 playerPos)
+{
+    const int gridSize = 3;
+    const int spacing = 5;
+    const int bugsPerGroup = gridSize * gridSize;
+    const int groupCount = static_cast<int>(bugs.size()) / bugsPerGroup;
+    const float minSpawnDistance = 350.0f;
+
+    for (int k = 0; k < groupCount; k++)
+    {
+        bool groupAlive = false;
+        for (int n = 0; n < bugsPerGroup; n++)
+        {
+            int idx = k * bugsPerGroup + n;
+            if (idx < static_cast<int>(bugs.size()) && bugs[idx] && !bugs[idx]->isDead())
+            {
+                groupAlive = true;
+                break;
+            }
+        }
+        if (groupAlive)
+            continue;
+
+        Vector2 startPosition = grid.getSpawnPositionAwayFrom(playerPos.x, playerPos.y, minSpawnDistance);
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                int index = k * bugsPerGroup + i * gridSize + j;
+                if (index < static_cast<int>(bugs.size()) && bugs[index])
+                    bugs[index]->spawnBug(startPosition.x + i * spacing, startPosition.y + j * spacing);
             }
         }
     }
@@ -83,21 +111,19 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
         DrawRectangle(0, 0, 3025, 3025, DARKGRAY);
 
         //grid.draw();
-        if (gameStart == false || aliveZombieCount == 0)
+        if (!gameStart || countAliveZombies(zombies) == 0)
         {
-            createZombies(zombies);
-            createBugs(bugs);
+            createZombies(zombies, player.getPosition());
+            createBugs(bugs, player.getPosition());
             gameStart = true;
-            //aliveZombieCount++;
         }
         player.draw();
+        if (Weapon *weapon = player.getWeapon())
+            weapon->draw(player.getPosition(), player.getDirection());
 
-        
         if (!zombies.empty())
         {
             updateZombies(zombies, deltaTime);
-        }else{
-            createZombies(zombies);
         }
         updateBugs(bugs, deltaTime);
         updateBullets(bullets, deltaTime);
@@ -116,6 +142,7 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
             finalScore = score;
         }
         drawHealthBar(player);
+        drawWeaponHud(player);
 
         EndDrawing();
     }
@@ -155,6 +182,44 @@ void Game::updateBugs(std::vector<Bug *> &bugs, float deltaTime)
             bugs[i]->draw();
         }
     }
+}
+
+void Game::drawWeaponHud(const Player &player)
+{
+    const Weapon *weapon = player.getWeapon();
+    if (!weapon)
+        return;
+
+    const int padding = 10;
+    const int barWidth = 120;
+    const int barHeight = 14;
+    const int y = padding + 34;
+
+    const char *weaponName = weapon->getName();
+    DrawText(weaponName, padding, y - 18, 16, LIGHTGRAY);
+
+    DrawRectangle(padding, y, barWidth + 4, barHeight + 4, WHITE);
+    DrawRectangle(padding + 2, y + 2, barWidth, barHeight, Color{40, 40, 40, 255});
+
+    int fillWidth = static_cast<int>((weapon->getAmmo() / static_cast<float>(weapon->getMaxAmmo())) * barWidth);
+    Color ammoColor = weapon->isReloading() ? ORANGE : SKYBLUE;
+    DrawRectangle(padding + 2, y + 2, fillWidth, barHeight, ammoColor);
+
+    const char *ammoText = weapon->isReloading()
+                               ? "Reloading..."
+                               : TextFormat("%d / %d", weapon->getAmmo(), weapon->getMaxAmmo());
+    DrawText(ammoText, padding + barWidth + 12, y, 14, WHITE);
+}
+
+int Game::countAliveZombies(const std::vector<Zombie *> &zombies) const
+{
+    int alive = 0;
+    for (Zombie *zombie : zombies)
+    {
+        if (zombie && !zombie->isDead())
+            alive++;
+    }
+    return alive;
 }
 
 void Game::drawHealthBar(const Player &player)

@@ -65,11 +65,15 @@ public:
 
     bool isStaticCollision(const Rectangle &rec1);
 
-    void handleBulletCollision(const Rectangle &rec1, int ignoreID);
+    void handleBulletCollision(const Rectangle &rec1, int characterIgnoreID);
+    void checkBulletHits(Bullet *bullet);
 
     void setBounds(int width, int height);
 
     bool checkBounds(const Rectangle &rec1);
+    void clampToBounds(float width, float height, float &x, float &y);
+    int getBoundsWidth() const { return boundsWidth; }
+    int getBoundsHeight() const { return boundsHeight; }
 
     //Update the collision rectangle of a dynamic object
 

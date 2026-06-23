@@ -88,37 +88,69 @@ bool CollisionMap::checkNPCCollision(const Rectangle &rec1, int ignoreID, Charac
 
     return false;
 }
-void CollisionMap::handleBulletCollision(const Rectangle &rec1, int ignoreID)
+void CollisionMap::handleBulletCollision(const Rectangle &rec1, int characterIgnoreID)
 {
-    for (const auto& pair : npcMap)
+    for (const auto &bulletPair : bulletMap)
     {
-        if (CheckCollisionRecs(rec1, npcMap[pair.first]->getCollisionBox()) && pair.first != ignoreID)
+        Bullet *bullet = bulletPair.second;
+        if (!bullet || !bullet->isActive())
+            continue;
+        if (!CheckCollisionRecs(rec1, bullet->getCollisionBox()))
+            continue;
+
+        for (const auto &npcPair : npcMap)
         {
-            pair.second->takeDamage(bulletMap[ignoreID]->getDamage());
-            bulletMap[ignoreID]->deactivate();
+            if (npcPair.first == characterIgnoreID)
+            {
+                npcPair.second->takeDamage(bullet->getDamage());
+                bullet->deactivate();
+                return;
+            }
+        }
+
+        for (const auto &playerPair : playerMap)
+        {
+            if (playerPair.first == characterIgnoreID)
+            {
+                playerPair.second->takeDamage(bullet->getDamage());
+                bullet->deactivate();
+                return;
+            }
+        }
+    }
+}
+
+void CollisionMap::checkBulletHits(Bullet *bullet)
+{
+    if (!bullet || !bullet->isActive())
+        return;
+
+    const Rectangle rec = bullet->getCollisionBox();
+
+    for (const auto &npcPair : npcMap)
+    {
+        Npc *npc = npcPair.second;
+        if (!npc || npc->isDead())
+            continue;
+        if (CheckCollisionRecs(rec, npc->getCollisionBox()))
+        {
+            npc->takeDamage(bullet->getDamage());
+            bullet->deactivate();
             return;
         }
     }
 
-    for (const auto& pair : playerMap)
+    for (Rectangle *staticRec : staticCollisionRectangles)
     {
-        if (CheckCollisionRecs(rec1, playerMap[pair.first]->getCollisionBox()) && pair.first != ignoreID)
+        if (CheckCollisionRecs(rec, *staticRec))
         {
-            pair.second->takeDamage(bulletMap[ignoreID]->getDamage());
-            bulletMap[ignoreID]->deactivate();
+            bullet->deactivate();
             return;
         }
     }
 
-    // Check for collisions with static objects
-    for (Rectangle *rec : staticCollisionRectangles)
-    {
-        if (CheckCollisionRecs(rec1, *rec))
-        {
-            bulletMap[ignoreID]->deactivate();
-            return;
-        }
-    }
+    if (checkBounds(rec))
+        bullet->deactivate();
 }
 
 void CollisionMap::setBounds(int width, int height)
@@ -175,17 +207,30 @@ void CollisionMap::updateNPCCollisionRectangle(int id, Rectangle *rec)
 
 void CollisionMap::updateBulletCollisionRectangle(int id, Rectangle *rec)
 {
-    bulletMap[id]->setCollisionBox(rec);;
+    if (rec && bulletMap.count(id))
+        bulletMap[id]->setCollisionBox(*rec);
 }
 
 bool CollisionMap::checkBounds(const Rectangle &rec1)
 {
+    return rec1.x < 0 || rec1.y < 0 ||
+           rec1.x + rec1.width > boundsWidth ||
+           rec1.y + rec1.height > boundsHeight;
+}
 
-    if (rec1.x <= 0 || rec1.x >= boundsWidth || rec1.y <= 0 || rec1.y >= boundsHeight)
-    {
-        return true;
-    }
-    return false;
+void CollisionMap::clampToBounds(float width, float height, float &x, float &y)
+{
+    float halfW = width / 2.0f;
+    float halfH = height / 2.0f;
+    float minX = halfW;
+    float minY = halfH;
+    float maxX = boundsWidth - halfW;
+    float maxY = boundsHeight - halfH;
+
+    if (x < minX) x = minX;
+    if (x > maxX) x = maxX;
+    if (y < minY) y = minY;
+    if (y > maxY) y = maxY;
 }
 
 

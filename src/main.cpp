@@ -5,7 +5,8 @@
 #include "gameobject.h"
 #include "grid.h"
 #include "bullet.h"
-#include "pistols.h"
+#include "weapon.h"
+#include "textures.h"
 #include "collisionMap.h"
 #include "character.h"
 #include <iostream>
@@ -18,6 +19,8 @@ void addBullets(std::vector<Bullet *> &bullets, Grid &grid, CollisionMap &collis
 
 int main()
 {
+        ChangeDirectory(GetApplicationDirectory());
+
         const int screenWidth = GetScreenWidth();
         const int screenHeight = GetScreenHeight();
 
@@ -34,17 +37,19 @@ int main()
         // Initialize the window with the grid and title
         Game game(windowWidth, windowHeight, grid, collisionMap, "Space Zombies!!!");
         SetTargetFPS(60);
-        // Create bullets for pistols
-        std::vector<Bullet *> pistolsBullets;
-        addBullets(pistolsBullets, grid, collisionMap, 100);
-        Pistols pistols(pistolsBullets);
-        // Initialize the players and NPCs
-        Pistols* poistolPntr = &pistols;
-        Player player(poistolPntr, grid, collisionMap);
+        GameTextures::Load();
+        // Create shared bullet pool and weapons
+        std::vector<Bullet *> bullets;
+        addBullets(bullets, grid, collisionMap, 40);
+        Weapon pistol(WeaponType::Pistol, bullets);
+        Weapon rifle(WeaponType::Rifle, bullets);
+        Weapon flamethrower(WeaponType::Flamethrower, bullets);
+        std::vector<Weapon *> weapons = {&pistol, &rifle, &flamethrower};
+        Player player(weapons, grid, collisionMap);
         std::vector<Zombie *> zombies;
         std::vector<Bug *> bugs;
-        addZombies(zombies, grid, collisionMap, 100);
-        addBugs(bugs, grid, collisionMap, 540);
+        addZombies(zombies, grid, collisionMap, 25);
+        addBugs(bugs, grid, collisionMap, 27);
 
         // Game objects
         game.addObject(new GameObject(300, 250, BLACK, 250.0f, 150.0f, 0, 0, grid, collisionMap));
@@ -74,8 +79,9 @@ int main()
         }
 
         // run the game
-        game.run(player, zombies, bugs, pistolsBullets);
+        game.run(player, zombies, bugs, bullets);
 
+        GameTextures::Unload();
         return 0;
 }
 void addZombies(std::vector<Zombie *> &zombies, Grid &grid, CollisionMap &collisionMap, int count)
@@ -84,7 +90,6 @@ void addZombies(std::vector<Zombie *> &zombies, Grid &grid, CollisionMap &collis
         {
                 Zombie *zombie = new Zombie(grid, collisionMap);
                 zombies.push_back(zombie);
-                zombieCount++;
         }
 }
 void addBugs(std::vector<Bug *> &bugs, Grid &grid, CollisionMap &collisionMap, int count)
@@ -93,14 +98,13 @@ void addBugs(std::vector<Bug *> &bugs, Grid &grid, CollisionMap &collisionMap, i
         {
                 Bug *bug = new Bug(grid, collisionMap);
                 bugs.push_back(bug);
-                bugCount++;
         }
 }
 void addBullets(std::vector<Bullet *> &bullets, Grid &grid, CollisionMap &collisionMap, int count)
 {
         for (int i = 0; i < count; i++)
         {
-                Bullet *bullet = new Bullet(2, 50, 10, 100, grid, collisionMap);
+                Bullet *bullet = new Bullet(3, 420, 25, 1.2f, grid, collisionMap);
                 bullets.push_back(bullet);
         }
 }

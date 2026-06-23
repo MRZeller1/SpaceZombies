@@ -18,6 +18,19 @@ target_link_libraries(SpaceZombies "${PROJECT_SOURCE_DIR}/lib/libraylib.a")
 
 # Link against macOS frameworks
 if(APPLE)
+    # CLT installs sometimes omit usr/include/c++/v1; headers only exist in the SDK.
+    if(CMAKE_OSX_SYSROOT)
+        set(LIBCXX_INCLUDE "${CMAKE_OSX_SYSROOT}/usr/include/c++/v1")
+    else()
+        execute_process(
+            COMMAND xcrun --show-sdk-path
+            OUTPUT_VARIABLE MACOS_SDK_PATH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(LIBCXX_INCLUDE "${MACOS_SDK_PATH}/usr/include/c++/v1")
+    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem${LIBCXX_INCLUDE}")
+
     find_library(COCOA_LIBRARY Cocoa)
     find_library(IOKIT_LIBRARY IOKit)
     find_library(COREVIDEO_LIBRARY CoreVideo)

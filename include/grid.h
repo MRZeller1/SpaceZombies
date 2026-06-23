@@ -23,6 +23,7 @@ public:
      Vector2 getGridPosition(float x, float y);
      Vector2 getObjectGridSize(float objectWidth, float objectHeight);
      Vector2 getRandomUnocupiedPosition();
+     Vector2 getSpawnPositionAwayFrom(float centerX, float centerY, float minDistance);
      void setCellAttributes(int x, int y, int type);
      int getCellSize();
      GridNode *getGridNode(int x, int y);

@@ -32,14 +32,16 @@ public:
     void addObject(GameObject *object);
     std::vector<GameObject *> getObjects();
     void run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *> &bugs, std::vector<Bullet *> &bullets);
-    void createZombies(std::vector<Zombie *> &zombies);
-    void createBugs(std::vector<Bug *> &bugs);
+    void createZombies(std::vector<Zombie *> &zombies, Vector2 playerPos);
+    void createBugs(std::vector<Bug *> &bugs, Vector2 playerPos);
     void updateBullets(std::vector<Bullet*> &bullets, float deltaTime);
     void updateZombies(std::vector<Zombie *> &zombies, float deltaTime);
     void updateBugs(std::vector<Bug *> &bugs, float deltaTime);
     void drawBullets(Player &player);
     void drawHealthBar(const Player &player);
+    void drawWeaponHud(const Player &player);
     void drawGameOverBanner(Player &player);
+    int countAliveZombies(const std::vector<Zombie *> &zombies) const;
     void updateScore(float deltaTime);
     float getScore() const { return score; }
     void drawScore();

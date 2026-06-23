@@ -22,14 +22,14 @@ Npc::Npc(Grid &grid, CollisionMap &collisionMap) : Character(grid, collisionMap,
 
 Npc::~Npc()
 {
-    UnloadTexture(leftTexture);
-    UnloadTexture(leftWalkTexture1);
-    UnloadTexture(leftWalkTexture2);
 }
 
 
 void Npc::update(float deltaTime, const std::vector<GameObject *> objects)
 {
+    if (!alive)
+        return;
+
     if (getCellDistance() != 100)
     {
         Vector2 newDirection = getCellDirection();
@@ -53,7 +53,9 @@ void Npc::update(float deltaTime, const std::vector<GameObject *> objects)
 void Npc::setCellAttributes(int startx, int starty)
 {
     Vector2 gridPos = grid.getGridPosition(startx, starty);
-    grid.setCellAttributes(gridPos.x, gridPos.y, NPC_TYPE);
+    if (!grid.isValidCell(gridPos.x, gridPos.y))
+        return;
+    grid.setCellAttributes((int)gridPos.x, (int)gridPos.y, NPC_TYPE);
 }
 
 void Npc::setMovement(float deltaTime)

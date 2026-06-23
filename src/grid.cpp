@@ -63,6 +63,16 @@ void Grid::initGrid()
                 grid[i][j]->setUp(grid[i - 1][j]);
                 grid[i - 1][j]->setDown(grid[i][j]);
             }
+            if (i > 0 && j > 0)
+            {
+                grid[i][j]->setUpLeft(grid[i - 1][j - 1]);
+                grid[i - 1][j - 1]->setDownRight(grid[i][j]);
+            }
+            if (i > 0 && j < cols - 1)
+            {
+                grid[i][j]->setUpRight(grid[i - 1][j + 1]);
+                grid[i - 1][j + 1]->setDownLeft(grid[i][j]);
+            }
         }
     }
 }
@@ -83,7 +93,35 @@ Vector2 Grid::getRandomUnocupiedPosition()
         x = GetRandomValue(0, cols - 1);
         y = GetRandomValue(0, rows - 1);
     }
-    return {static_cast<float>(x) * 25, static_cast<float>(y) * 25};
+    return {static_cast<float>(x) * cellSize + cellSize * 0.5f, static_cast<float>(y) * cellSize + cellSize * 0.5f};
+}
+
+Vector2 Grid::getSpawnPositionAwayFrom(float centerX, float centerY, float minDistance)
+{
+    const int margin = 4;
+    const float minDistSq = minDistance * minDistance;
+
+    for (int attempt = 0; attempt < 120; attempt++)
+    {
+        int x = GetRandomValue(margin, cols - 1 - margin);
+        int y = GetRandomValue(margin, rows - 1 - margin);
+        if (grid[y][x]->getType() != 0)
+            continue;
+
+        float worldX = x * cellSize + cellSize * 0.5f;
+        float worldY = y * cellSize + cellSize * 0.5f;
+        float dx = worldX - centerX;
+        float dy = worldY - centerY;
+        if (dx * dx + dy * dy >= minDistSq)
+            return {worldX, worldY};
+    }
+
+    // Fallback: spawn in the quadrant farthest from the player
+    bool right = centerX < (cols * cellSize) * 0.5f;
+    bool down = centerY < (rows * cellSize) * 0.5f;
+    int x = right ? cols - margin - 1 : margin;
+    int y = down ? rows - margin - 1 : margin;
+    return {x * cellSize + cellSize * 0.5f, y * cellSize + cellSize * 0.5f};
 }
 // get the size of object in cell units
 Vector2 Grid::getObjectGridSize(float objectWidth, float objectHeight)
@@ -97,6 +135,8 @@ Vector2 Grid::getObjectGridSize(float objectWidth, float objectHeight)
 // set the attributes of the cell
 void Grid::setCellAttributes(int x, int y, int type)
 {
+    if (!isValidCell(x, y))
+        return;
     grid[y][x]->setAttributes(type);
 }
 
@@ -107,6 +147,8 @@ int Grid::getCellSize()
 
 GridNode *Grid::getGridNode(int x, int y)
 {
+    if (!isValidCell(x, y))
+        return nullptr;
     return grid[y][x];
 }
 
@@ -131,7 +173,8 @@ bool Grid::isValidCell(float x, float y)
     int gridX = static_cast<int>(x);
     int gridY = static_cast<int>(y);
 
-    // Check if the indices are within the bounds of the grid
+    if (gridX < 0 || gridY < 0)
+        return false;
     if (gridX > grid[0].size() - 1)
         return false;
     if (gridY > grid.size() - 1)
@@ -170,9 +213,12 @@ void Grid::updateDistances(Vector2 playerPos)
 }
 
 void Grid::partialUpdate(Vector2 playerPos, int radius) {
-        std::queue<GridNode*> cellsToCheck;
         Vector2 gridPos = getGridPosition(playerPos.x, playerPos.y);
-        GridNode* playerNode = grid[gridPos.y][gridPos.x];
+        if (!isValidCell(gridPos.x, gridPos.y))
+            return;
+
+        std::queue<GridNode*> cellsToCheck;
+        GridNode* playerNode = grid[(int)gridPos.y][(int)gridPos.x];
         
         // Reset distances for all cells within the radius
         for (int y = std::max(0, (int)gridPos.y - radius); y < std::min(rows, (int)gridPos.y + radius + 1); ++y) {
