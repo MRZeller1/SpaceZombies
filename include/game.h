@@ -25,6 +25,13 @@ private:
     float finalScore;
     float lastScoreUpdate;
     std::vector<GameObject *> objects;
+    int viewportW;
+    int viewportH;
+    void updateViewport();
+    void drawScore();
+    void drawPlayerHud(const Player &player);
+    void drawWeaponHud(const Player &player);
+    void drawScreenHud(Player &player);
 
 public:
     Game(int width, int height, const Grid &grid, CollisionMap &collisionMap, const char *title);
@@ -38,16 +45,11 @@ public:
     void updateZombies(std::vector<Zombie *> &zombies, float deltaTime);
     void updateBugs(std::vector<Bug *> &bugs, float deltaTime);
     void drawBullets(Player &player);
-    void drawHealthBar(const Player &player);
-    void drawSprintMeter(const Player &player);
-    void drawWeaponHud(const Player &player);
     void drawGameOverBanner(Player &player);
     int countAliveZombies(const std::vector<Zombie *> &zombies) const;
     void drawEnvironment();
     void updateScore(float deltaTime);
     float getScore() const { return score; }
-    void drawScore();
-    
 
 };
 

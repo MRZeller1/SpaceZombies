@@ -124,11 +124,10 @@ int main()
 {
         ChangeDirectory(GetApplicationDirectory());
 
-        const int screenWidth = GetScreenWidth();
-        const int screenHeight = GetScreenHeight();
-
-        int windowWidth = screenWidth * .9;
-        int windowHeight = screenHeight * .9;
+        const int monitorW = GetMonitorWidth(GetCurrentMonitor());
+        const int monitorH = GetMonitorHeight(GetCurrentMonitor());
+        int windowWidth = static_cast<int>(monitorW * 0.9f);
+        int windowHeight = static_cast<int>(monitorH * 0.9f);
 
         const int mapSize = 2000;
         const int playBounds = 1975;

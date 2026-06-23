@@ -35,7 +35,6 @@ void Player::update(float deltaTime, const std::vector<GameObject *> objects)
         fireWeapon();
     }
     changeWeapon();
-    updateCamera();
 }
 
 void Player::handleMovementInput(float deltaTime)
@@ -73,7 +72,7 @@ void Player::handleMovementInput(float deltaTime)
 
 void Player::handleSprinting(float deltaTime)
 {
-    if (IsKeyDown(KEY_F) && sptrintcooldownTimer <= 0.0f)
+    if (IsKeyPressed(KEY_F) && sptrintcooldownTimer <= 0.0f)
     {
         isSprinting = true;
         sprintTimer = sprintDuration;
@@ -122,7 +121,7 @@ void Player::spawnPlayer(float startx, float starty)
     grid.setCellAttributes(gridPos.x, gridPos.y, 1);
     camera = {0};
     camera.target = (Vector2){position.x, position.y};
-    camera.offset = (Vector2){GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
+    camera.offset = (Vector2){640.0f, 360.0f};
     camera.rotation = 0.0f;
     camera.zoom = 2.25f;
     alive = true;
@@ -181,7 +180,8 @@ void Player::updateGridPosition()
     }
 }
 
-void Player::updateCamera()
+void Player::updateCamera(int screenW, int screenH)
 {
     camera.target = (Vector2){position.x, position.y};
+    camera.offset = (Vector2){screenW / 2.0f, screenH / 2.0f};
 }

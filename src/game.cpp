@@ -10,18 +10,27 @@
 #include "weapon.h"
 
 Game::Game(int width, int height, const Grid &grid, CollisionMap &collisionMap, const char *title)
-    : m_width(width), m_height(height), grid(grid), collisionMap(collisionMap), m_title(title), score(0), lastScoreUpdate(0)
+    : m_width(width), m_height(height), grid(grid), collisionMap(collisionMap), m_title(title), score(0),
+      lastScoreUpdate(0), viewportW(width), viewportH(height)
 {
-    const int screenWidth = GetScreenWidth();
-    const int screenHeight = GetScreenHeight();
-    int windowPosX = (screenWidth - width) * .05;
-    int windowPosY = (screenWidth - height) * .05;
-
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(width, height, m_title);
-    SetWindowPosition(windowPosX, windowPosY);
+    PollInputEvents();
+
+    const int monitorW = GetMonitorWidth(GetCurrentMonitor());
+    const int monitorH = GetMonitorHeight(GetCurrentMonitor());
+    updateViewport();
+    SetWindowPosition((monitorW - viewportW) / 2, (monitorH - viewportH) / 2);
 
     SetTargetFPS(60);
+}
+
+void Game::updateViewport()
+{
+    if (GetScreenWidth() > 0)
+        viewportW = GetScreenWidth();
+    if (GetScreenHeight() > 0)
+        viewportH = GetScreenHeight();
 }
 
 Game::~Game()
@@ -111,47 +120,65 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
     while (!WindowShouldClose())
     {
         float deltaTime = GetFrameTime();
+        updateViewport();
         updateScore(deltaTime);
         player.update(deltaTime, objects);
-        player.updateCamera();
-        BeginDrawing();
-        ClearBackground(BLACK);
-        DrawText("Space Zombies!", 685, 10, 20, LIGHTGRAY);
-        BeginMode2D(player.getCamera());
-        drawEnvironment();
+
         if (!gameStart || countAliveZombies(zombies) == 0)
         {
             createZombies(zombies, player.getPosition());
             createBugs(bugs, player.getPosition());
             gameStart = true;
         }
+
+        if (!zombies.empty())
+            updateZombies(zombies, deltaTime);
+        updateBugs(bugs, deltaTime);
+        updateBullets(bullets, deltaTime);
+
+        player.updateCamera(viewportW, viewportH);
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        BeginMode2D(player.getCamera());
+        drawEnvironment();
         player.draw();
         if (Weapon *weapon = player.getWeapon())
             weapon->draw(player.getPosition(), player.getDirection());
 
-        if (!zombies.empty())
+        for (int i = 0; i < static_cast<int>(zombies.size()); i++)
         {
-            updateZombies(zombies, deltaTime);
+            if (zombies[i] && !zombies[i]->isDead())
+                zombies[i]->draw();
         }
-        updateBugs(bugs, deltaTime);
-        updateBullets(bullets, deltaTime);
+        for (int i = 0; i < static_cast<int>(bugs.size()); i++)
+        {
+            if (bugs[i] && !bugs[i]->isDead())
+                bugs[i]->draw();
+        }
+        for (int i = 0; i < static_cast<int>(bullets.size()); i++)
+        {
+            if (bullets[i] && bullets[i]->isActive())
+                bullets[i]->draw();
+        }
         for (GameObject *object : objects)
-        {
             object->draw();
-        }
-        
+
         EndMode2D();
-        
-        if (player.isDead()) {
+
+        BeginScissorMode(0, 0, viewportW, viewportH);
+        if (player.isDead())
+        {
             drawGameOverBanner(player);
             player.setHealth(0);
-        }else{
-            drawScore();
-            finalScore = score;
         }
-        drawHealthBar(player);
-        drawSprintMeter(player);
-        drawWeaponHud(player);
+        else
+        {
+            finalScore = score;
+            drawScreenHud(player);
+        }
+        EndScissorMode();
 
         EndDrawing();
     }
@@ -159,37 +186,28 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
 
 void Game::updateBullets(std::vector<Bullet*> &bullets, float deltaTime)
 {
-    for (int i = 0; i < bullets.size(); i++)
+    for (int i = 0; i < static_cast<int>(bullets.size()); i++)
     {
-        if (bullets[i]->isActive())
-        {
+        if (bullets[i] && bullets[i]->isActive())
             bullets[i]->update(deltaTime);
-            bullets[i]->draw();
-        }
     }
 }
 
 void Game::updateZombies(std::vector<Zombie *> &zombies, float deltaTime)
 {
-    for (int i = 0; i < zombies.size(); i++)
-        {
-            if (!zombies[i]->isDead())
-            {
-                zombies[i]->update(deltaTime, objects);
-                zombies[i]->draw();
-            }
-        }
+    for (int i = 0; i < static_cast<int>(zombies.size()); i++)
+    {
+        if (zombies[i] && !zombies[i]->isDead())
+            zombies[i]->update(deltaTime, objects);
+    }
 }
 
 void Game::updateBugs(std::vector<Bug *> &bugs, float deltaTime)
 {
-    for (int i = 0; i < bugs.size(); i++)
+    for (int i = 0; i < static_cast<int>(bugs.size()); i++)
     {
-        if (!bugs[i]->isDead())
-        {
+        if (bugs[i] && !bugs[i]->isDead())
             bugs[i]->update(deltaTime, objects);
-            bugs[i]->draw();
-        }
     }
 }
 
@@ -206,10 +224,8 @@ void Game::drawWeaponHud(const Player &player)
     const int maxAmmo = weapon->getMaxAmmo();
     const int panelWidth = maxAmmo * bulletW + (maxAmmo - 1) * bulletGap + padding * 2;
     const int panelHeight = 56;
-    const int screenWidth = GetScreenWidth();
-    const int screenHeight = GetScreenHeight();
-    const int panelX = screenWidth - panelWidth - padding;
-    const int panelY = screenHeight - panelHeight - padding;
+    const int panelX = viewportW - panelWidth - padding;
+    const int panelY = viewportH - panelHeight - padding;
 
     DrawRectangle(panelX, panelY, panelWidth, panelHeight, Color{0, 0, 0, 170});
     DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, Color{180, 180, 180, 255});
@@ -240,6 +256,17 @@ void Game::drawWeaponHud(const Player &player)
                                : TextFormat("%d / %d", currentAmmo, maxAmmo);
     int ammoWidth = MeasureText(ammoText, 12);
     DrawText(ammoText, panelX + (panelWidth - ammoWidth) / 2, panelY + panelHeight - 16, 12, WHITE);
+}
+
+void Game::drawScreenHud(Player &player)
+{
+    const char *title = "Space Zombies!";
+    int titleWidth = MeasureText(title, 20);
+    DrawText(title, (viewportW - titleWidth) / 2, 10, 20, LIGHTGRAY);
+
+    drawScore();
+    drawPlayerHud(player);
+    drawWeaponHud(player);
 }
 
 int Game::countAliveZombies(const std::vector<Zombie *> &zombies) const
@@ -296,68 +323,64 @@ void Game::drawEnvironment()
         DrawRectangle(p.x - 32, p.y - 6, 64, 12, Color{110, 82, 28, 120});
 }
 
-void Game::drawHealthBar(const Player &player)
+void Game::drawPlayerHud(const Player &player)
 {
-    int barWidth = 200;
-    int barHeight = 20;
-    int borderSize = 2;
-    int padding = 10; 
-    
-    // Draw border
-    DrawRectangle(padding, padding, barWidth + borderSize * 2, barHeight + borderSize * 2, WHITE);
-    
-    // Draw background
-    DrawRectangle(padding + borderSize, padding + borderSize, barWidth, barHeight, RED);
-    
-    // Draw health
-    int healthWidth = static_cast<int>((player.getHealth() / static_cast<float>(DEFAULT_PLAYER_HEALTH)) * barWidth);
-    DrawRectangle(padding + borderSize, padding + borderSize, healthWidth, barHeight, GREEN);
-    
-    // Draw text
-    std::string healthText = std::to_string(player.getHealth()) + " / " + std::to_string(DEFAULT_PLAYER_HEALTH);
-    DrawText(healthText.c_str(), padding + 5, padding + 2, 16, WHITE);
-}
+    const int pad = 12;
+    const int panelW = 230;
+    const int panelH = 96;
+    const int x = pad;
+    const int y = pad;
+    const int inner = 10;
+    const int barW = panelW - inner * 2;
+    const int barH = 18;
 
-void Game::drawSprintMeter(const Player &player)
-{
-    const int barWidth = 200;
-    const int barHeight = 14;
-    const int borderSize = 2;
-    const int padding = 10;
-    const int top = padding + 20 + borderSize * 2 + 8;
+    DrawRectangle(x, y, panelW, panelH, Color{0, 0, 0, 200});
+    DrawRectangleLines(x, y, panelW, panelH, Color{170, 170, 170, 255});
+
+    // Health
+    const int healthBarY = y + inner + 12;
+    DrawText("HEALTH", x + inner, y + inner, 12, LIGHTGRAY);
+    DrawRectangle(x + inner, healthBarY, barW, barH, Color{90, 25, 25, 255});
+    const int healthFill = static_cast<int>(
+        (player.getHealth() / static_cast<float>(DEFAULT_PLAYER_HEALTH)) * barW);
+    DrawRectangle(x + inner, healthBarY, healthFill, barH, GREEN);
+    DrawText(TextFormat("%d / %d", player.getHealth(), DEFAULT_PLAYER_HEALTH),
+             x + inner + 4, healthBarY + 2, 14, WHITE);
+
+    // Sprint
+    const int sprintBarY = healthBarY + barH + 18;
+    DrawText("SPRINT  [F]", x + inner, sprintBarY - 14, 12, Color{220, 180, 80, 255});
 
     const float ratio = std::max(0.0f, std::min(1.0f, player.getSprintMeterRatio()));
-    const int fillWidth = static_cast<int>(ratio * barWidth);
+    const int sprintFill = static_cast<int>(ratio * barW);
 
-    Color fillColor;
-    Color bgColor = {45, 45, 48, 255};
+    Color sprintBg = {35, 35, 40, 255};
+    Color sprintFillColor;
     const char *statusText;
 
     if (player.isSprintActive())
     {
-        fillColor = {240, 170, 50, 255};
-        statusText = "SPRINT";
+        sprintFillColor = {255, 185, 40, 255};
+        statusText = "BOOSTING";
     }
     else if (!player.isSprintReady())
     {
-        fillColor = {110, 110, 118, 255};
-        statusText = "RECHARGE";
+        sprintFillColor = {130, 130, 140, 255};
+        statusText = "RECHARGING";
     }
     else
     {
-        fillColor = {210, 150, 45, 255};
+        sprintFillColor = {255, 200, 60, 255};
         statusText = "READY";
     }
 
-    DrawRectangle(padding, top, barWidth + borderSize * 2, barHeight + borderSize * 2, WHITE);
-    DrawRectangle(padding + borderSize, top + borderSize, barWidth, barHeight, bgColor);
-    if (fillWidth > 0)
-        DrawRectangle(padding + borderSize, top + borderSize, fillWidth, barHeight, fillColor);
+    DrawRectangle(x + inner, sprintBarY, barW, barH, sprintBg);
+    if (sprintFill > 0)
+        DrawRectangle(x + inner, sprintBarY, sprintFill, barH, sprintFillColor);
+    DrawRectangleLines(x + inner, sprintBarY, barW, barH, Color{100, 100, 105, 255});
 
-    DrawText("Sprint [F]", padding + 5, top + 1, 12, LIGHTGRAY);
     int statusWidth = MeasureText(statusText, 12);
-    DrawText(statusText, padding + barWidth - statusWidth - 4, top + 1, 12,
-             player.isSprintActive() ? Color{255, 220, 120, 255} : LIGHTGRAY);
+    DrawText(statusText, x + inner + barW - statusWidth, sprintBarY + 3, 12, sprintFillColor);
 }
 
 void Game::drawGameOverBanner(Player &player)
@@ -404,20 +427,16 @@ void Game::updateScore(float deltaTime)
     }
 }
 
-void Game::drawScore() {
-    const char* scoreText = TextFormat("Score: %.0f", score);
-    int fontSize = 20;
-    int padding = 10;
-    
+void Game::drawScore()
+{
+    const char *scoreText = TextFormat("Score: %.0f", score);
+    const int fontSize = 20;
+    const int padding = 10;
+
     int textWidth = MeasureText(scoreText, fontSize);
     int textHeight = fontSize;
-    
-    int screenWidth = GetScreenWidth();
-    int screenHeight = GetScreenHeight();
-    
-    // Draw background rectangle
-    DrawRectangle(screenWidth - textWidth - padding * 2, 0, textWidth + padding * 2, textHeight + padding * 2, Color{0, 0, 0, 150});
-    
-    // Draw score text
-    DrawText(scoreText, screenWidth - textWidth - padding, padding, fontSize, WHITE);
+
+    DrawRectangle(viewportW - textWidth - padding * 2, 0, textWidth + padding * 2, textHeight + padding * 2,
+                  Color{0, 0, 0, 150});
+    DrawText(scoreText, viewportW - textWidth - padding, padding, fontSize, WHITE);
 }

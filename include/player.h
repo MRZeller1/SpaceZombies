@@ -45,7 +45,7 @@ public:
     Vector2 getDirection() const { return direction; }
     Weapon *getWeapon() const { return currentWeapon; }
     Camera2D getCamera() const {return camera;}
-    void updateCamera();
+    void updateCamera(int screenW, int screenH);
     void loadTextures();
     void setHealth(int health) { this->health = health; }
     int getTextureHeight(){return currentTexture.height;}
