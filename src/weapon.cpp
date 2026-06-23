@@ -158,11 +158,27 @@ void Weapon::draw(Vector2 position, Vector2 direction)
         direction.y /= len;
     }
 
-    float perpX = -direction.y;
-    float perpY = direction.x;
+    // Keep grip on a consistent screen side; mirror horizontally for left/right.
+    Vector2 aim = direction;
+    Vector2 perp = {0.0f, 1.0f};
+    if (std::fabs(direction.x) >= std::fabs(direction.y))
+    {
+        aim.x = direction.x >= 0.0f ? 1.0f : -1.0f;
+        aim.y = 0.0f;
+        perp = {0.0f, 1.0f};
+    }
+    else
+    {
+        aim.x = 0.0f;
+        aim.y = direction.y >= 0.0f ? 1.0f : -1.0f;
+        perp = {1.0f, 0.0f};
+    }
 
-    Vector2 hand = {position.x + direction.x * 4.0f + perpX * 6.0f,
-                    position.y + direction.y * 4.0f + perpY * 6.0f};
+    float perpX = perp.x;
+    float perpY = perp.y;
+
+    Vector2 hand = {position.x + aim.x * 4.0f + perpX * 6.0f,
+                    position.y + aim.y * 4.0f + perpY * 6.0f};
 
     Color slide = {58, 60, 66, 255};
     Color frame = {42, 44, 48, 255};
@@ -171,37 +187,37 @@ void Weapon::draw(Vector2 position, Vector2 direction)
 
     if (type == WeaponType::Pistol)
     {
-        Vector2 slideCenter = {hand.x + direction.x * 5.0f, hand.y + direction.y * 5.0f};
-        Vector2 barrelCenter = {slideCenter.x + direction.x * 7.0f, slideCenter.y + direction.y * 7.0f};
-        Vector2 gripCenter = {hand.x - direction.x * 2.0f + perpX * 3.0f,
-                              hand.y - direction.y * 2.0f + perpY * 3.0f};
-        Vector2 triggerGuard = {hand.x + direction.x * 1.0f + perpX * 2.0f,
-                                hand.y + direction.y * 1.0f + perpY * 2.0f};
+        Vector2 slideCenter = {hand.x + aim.x * 5.0f, hand.y + aim.y * 5.0f};
+        Vector2 barrelCenter = {slideCenter.x + aim.x * 7.0f, slideCenter.y + aim.y * 7.0f};
+        Vector2 gripCenter = {hand.x - aim.x * 2.0f + perpX * 3.0f,
+                              hand.y - aim.y * 2.0f + perpY * 3.0f};
+        Vector2 triggerGuard = {hand.x + aim.x * 1.0f + perpX * 2.0f,
+                                hand.y + aim.y * 1.0f + perpY * 2.0f};
 
-        drawOrientedBox(slideCenter, 11.0f, 4.0f, direction, slide);
-        drawOrientedBox(barrelCenter, 7.0f, 2.5f, direction, frame);
-        drawOrientedBox(gripCenter, 5.0f, 3.5f, direction, gripColor);
-        drawOrientedBox(triggerGuard, 3.0f, 2.0f, direction, accent);
+        drawOrientedBox(slideCenter, 11.0f, 4.0f, aim, slide);
+        drawOrientedBox(barrelCenter, 7.0f, 2.5f, aim, frame);
+        drawOrientedBox(gripCenter, 5.0f, 3.5f, aim, gripColor);
+        drawOrientedBox(triggerGuard, 3.0f, 2.0f, aim, accent);
 
-        Vector2 muzzle = {barrelCenter.x + direction.x * 5.0f, barrelCenter.y + direction.y * 5.0f};
+        Vector2 muzzle = {barrelCenter.x + aim.x * 5.0f, barrelCenter.y + aim.y * 5.0f};
         DrawCircleV(muzzle, 1.5f, frame);
 
         if (muzzleFlashTimer > 0.0f)
         {
-            Vector2 flash = {muzzle.x + direction.x * 3.0f, muzzle.y + direction.y * 3.0f};
+            Vector2 flash = {muzzle.x + aim.x * 3.0f, muzzle.y + aim.y * 3.0f};
             DrawCircleV(flash, 4.0f, Color{255, 230, 100, 220});
         }
     }
     else if (type == WeaponType::Rifle)
     {
-        Vector2 body = {hand.x + direction.x * 10.0f, hand.y + direction.y * 10.0f};
-        drawOrientedBox(body, 24.0f, 3.5f, direction, slide);
-        drawOrientedBox(hand, 6.0f, 3.0f, direction, gripColor);
+        Vector2 body = {hand.x + aim.x * 10.0f, hand.y + aim.y * 10.0f};
+        drawOrientedBox(body, 24.0f, 3.5f, aim, slide);
+        drawOrientedBox(hand, 6.0f, 3.0f, aim, gripColor);
     }
     else
     {
-        Vector2 nozzle = {hand.x + direction.x * 12.0f, hand.y + direction.y * 12.0f};
-        drawOrientedBox(nozzle, 10.0f, 5.0f, direction, Color{90, 90, 90, 255});
+        Vector2 nozzle = {hand.x + aim.x * 12.0f, hand.y + aim.y * 12.0f};
+        drawOrientedBox(nozzle, 10.0f, 5.0f, aim, Color{90, 90, 90, 255});
         if (muzzleFlashTimer > 0.0f)
             DrawCircleV(nozzle, 6.0f, Color{255, 120, 40, 180});
     }

@@ -190,25 +190,47 @@ void Game::drawWeaponHud(const Player &player)
     if (!weapon)
         return;
 
-    const int padding = 10;
-    const int barWidth = 120;
-    const int barHeight = 14;
-    const int y = padding + 34;
+    const int padding = 12;
+    const int bulletW = 8;
+    const int bulletH = 16;
+    const int bulletGap = 4;
+    const int maxAmmo = weapon->getMaxAmmo();
+    const int panelWidth = maxAmmo * bulletW + (maxAmmo - 1) * bulletGap + padding * 2;
+    const int panelHeight = 56;
+    const int screenWidth = GetScreenWidth();
+    const int screenHeight = GetScreenHeight();
+    const int panelX = screenWidth - panelWidth - padding;
+    const int panelY = screenHeight - panelHeight - padding;
+
+    DrawRectangle(panelX, panelY, panelWidth, panelHeight, Color{0, 0, 0, 170});
+    DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, Color{180, 180, 180, 255});
 
     const char *weaponName = weapon->getName();
-    DrawText(weaponName, padding, y - 18, 16, LIGHTGRAY);
+    int nameWidth = MeasureText(weaponName, 16);
+    DrawText(weaponName, panelX + (panelWidth - nameWidth) / 2, panelY + 6, 16, LIGHTGRAY);
 
-    DrawRectangle(padding, y, barWidth + 4, barHeight + 4, WHITE);
-    DrawRectangle(padding + 2, y + 2, barWidth, barHeight, Color{40, 40, 40, 255});
+    const int bulletsY = panelY + 28;
+    const int bulletsStartX = panelX + padding;
+    const int currentAmmo = weapon->getAmmo();
+    const Color loadedColor = weapon->isReloading() ? Color{220, 140, 40, 255} : Color{230, 210, 80, 255};
+    const Color casingColor = Color{120, 95, 50, 255};
+    const Color emptyColor = Color{50, 50, 50, 255};
 
-    int fillWidth = static_cast<int>((weapon->getAmmo() / static_cast<float>(weapon->getMaxAmmo())) * barWidth);
-    Color ammoColor = weapon->isReloading() ? ORANGE : SKYBLUE;
-    DrawRectangle(padding + 2, y + 2, fillWidth, barHeight, ammoColor);
+    for (int i = 0; i < maxAmmo; i++)
+    {
+        int x = bulletsStartX + i * (bulletW + bulletGap);
+        bool loaded = i < currentAmmo;
+        DrawRectangle(x, bulletsY, bulletW, bulletH, loaded ? casingColor : emptyColor);
+        DrawRectangle(x + 1, bulletsY + 1, bulletW - 2, 5, loaded ? loadedColor : Color{70, 70, 70, 255});
+        if (loaded)
+            DrawRectangle(x + 2, bulletsY + bulletH - 4, bulletW - 4, 2, Color{180, 160, 70, 255});
+    }
 
     const char *ammoText = weapon->isReloading()
                                ? "Reloading..."
-                               : TextFormat("%d / %d", weapon->getAmmo(), weapon->getMaxAmmo());
-    DrawText(ammoText, padding + barWidth + 12, y, 14, WHITE);
+                               : TextFormat("%d / %d", currentAmmo, maxAmmo);
+    int ammoWidth = MeasureText(ammoText, 12);
+    DrawText(ammoText, panelX + (panelWidth - ammoWidth) / 2, panelY + panelHeight - 16, 12, WHITE);
 }
 
 int Game::countAliveZombies(const std::vector<Zombie *> &zombies) const
