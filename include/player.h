@@ -50,5 +50,8 @@ public:
     void setHealth(int health) { this->health = health; }
     int getTextureHeight(){return currentTexture.height;}
     int getTextureWidth(){return currentTexture.width;}
+    bool isSprintActive() const { return isSprinting; }
+    float getSprintMeterRatio() const;
+    bool isSprintReady() const { return sptrintcooldownTimer <= 0.0f; }
 };
 #endif

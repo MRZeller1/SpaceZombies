@@ -39,6 +39,7 @@ public:
     void updateBugs(std::vector<Bug *> &bugs, float deltaTime);
     void drawBullets(Player &player);
     void drawHealthBar(const Player &player);
+    void drawSprintMeter(const Player &player);
     void drawWeaponHud(const Player &player);
     void drawGameOverBanner(Player &player);
     int countAliveZombies(const std::vector<Zombie *> &zombies) const;

@@ -150,6 +150,7 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
             finalScore = score;
         }
         drawHealthBar(player);
+        drawSprintMeter(player);
         drawWeaponHud(player);
 
         EndDrawing();
@@ -315,6 +316,48 @@ void Game::drawHealthBar(const Player &player)
     // Draw text
     std::string healthText = std::to_string(player.getHealth()) + " / " + std::to_string(DEFAULT_PLAYER_HEALTH);
     DrawText(healthText.c_str(), padding + 5, padding + 2, 16, WHITE);
+}
+
+void Game::drawSprintMeter(const Player &player)
+{
+    const int barWidth = 200;
+    const int barHeight = 14;
+    const int borderSize = 2;
+    const int padding = 10;
+    const int top = padding + 20 + borderSize * 2 + 8;
+
+    const float ratio = std::max(0.0f, std::min(1.0f, player.getSprintMeterRatio()));
+    const int fillWidth = static_cast<int>(ratio * barWidth);
+
+    Color fillColor;
+    Color bgColor = {45, 45, 48, 255};
+    const char *statusText;
+
+    if (player.isSprintActive())
+    {
+        fillColor = {240, 170, 50, 255};
+        statusText = "SPRINT";
+    }
+    else if (!player.isSprintReady())
+    {
+        fillColor = {110, 110, 118, 255};
+        statusText = "RECHARGE";
+    }
+    else
+    {
+        fillColor = {210, 150, 45, 255};
+        statusText = "READY";
+    }
+
+    DrawRectangle(padding, top, barWidth + borderSize * 2, barHeight + borderSize * 2, WHITE);
+    DrawRectangle(padding + borderSize, top + borderSize, barWidth, barHeight, bgColor);
+    if (fillWidth > 0)
+        DrawRectangle(padding + borderSize, top + borderSize, fillWidth, barHeight, fillColor);
+
+    DrawText("Sprint [F]", padding + 5, top + 1, 12, LIGHTGRAY);
+    int statusWidth = MeasureText(statusText, 12);
+    DrawText(statusText, padding + barWidth - statusWidth - 4, top + 1, 12,
+             player.isSprintActive() ? Color{255, 220, 120, 255} : LIGHTGRAY);
 }
 
 void Game::drawGameOverBanner(Player &player)

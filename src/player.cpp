@@ -91,6 +91,15 @@ void Player::handleSprinting(float deltaTime)
         sptrintcooldownTimer -= deltaTime;
 }
 
+float Player::getSprintMeterRatio() const
+{
+    if (isSprinting)
+        return sprintTimer / sprintDuration;
+    if (sptrintcooldownTimer > 0.0f)
+        return 1.0f - (sptrintcooldownTimer / sprintCooldown);
+    return 1.0f;
+}
+
 void Player::spawnAtClearPosition(float preferredX, float preferredY)
 {
     Vector2 pos = grid.getClearSpawnPosition(
