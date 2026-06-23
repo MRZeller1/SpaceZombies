@@ -33,6 +33,7 @@ public:
     void handleMovementInput(float deltaTime);
     void handleSprinting(float deltaTime);
     void spawnPlayer(float startx, float starty);
+    void spawnAtClearPosition(float preferredX, float preferredY);
     void changeWeapon();
     void fireWeapon();
     void reloadWeapon();

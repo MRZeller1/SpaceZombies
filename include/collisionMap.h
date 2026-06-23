@@ -64,13 +64,14 @@ public:
     bool isBulletCollision(const Rectangle &rec1, int ignoreID);
 
     bool isStaticCollision(const Rectangle &rec1);
+    bool isSpawnBlocked(const Rectangle &rec) const;
 
     void handleBulletCollision(const Rectangle &rec1, int characterIgnoreID);
     void checkBulletHits(Bullet *bullet);
 
     void setBounds(int width, int height);
 
-    bool checkBounds(const Rectangle &rec1);
+    bool checkBounds(const Rectangle &rec1) const;
     void clampToBounds(float width, float height, float &x, float &y);
     int getBoundsWidth() const { return boundsWidth; }
     int getBoundsHeight() const { return boundsHeight; }

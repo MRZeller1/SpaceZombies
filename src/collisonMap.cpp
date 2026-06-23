@@ -195,6 +195,19 @@ bool CollisionMap::isStaticCollision(const Rectangle &rec1)
     return false;
 }
 
+bool CollisionMap::isSpawnBlocked(const Rectangle &rec) const
+{
+    if (checkBounds(rec))
+        return true;
+
+    for (Rectangle *staticRec : staticCollisionRectangles)
+    {
+        if (CheckCollisionRecs(rec, *staticRec))
+            return true;
+    }
+    return false;
+}
+
 void CollisionMap::updatePlayerCollisionRectangle(int id, Rectangle *rec)
 {
     playerMap[id]->setCollisionBox(rec);
@@ -211,7 +224,7 @@ void CollisionMap::updateBulletCollisionRectangle(int id, Rectangle *rec)
         bulletMap[id]->setCollisionBox(*rec);
 }
 
-bool CollisionMap::checkBounds(const Rectangle &rec1)
+bool CollisionMap::checkBounds(const Rectangle &rec1) const
 {
     return rec1.x < 0 || rec1.y < 0 ||
            rec1.x + rec1.width > boundsWidth ||

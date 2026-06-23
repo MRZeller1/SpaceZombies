@@ -10,7 +10,6 @@ Player::Player(std::vector<Weapon *> &weapons, Grid &grid, CollisionMap &collisi
     type = 1;
     currentTexture = leftTexture;
     currentWeapon = weapons.empty() ? nullptr : weapons[0];
-    spawnPlayer(320, 1000);
 }
 
 Player::~Player()
@@ -90,6 +89,17 @@ void Player::handleSprinting(float deltaTime)
 
     if (sptrintcooldownTimer > 0.0f)
         sptrintcooldownTimer -= deltaTime;
+}
+
+void Player::spawnAtClearPosition(float preferredX, float preferredY)
+{
+    Vector2 pos = grid.getClearSpawnPosition(
+        collisionMap,
+        (float)currentTexture.width,
+        (float)currentTexture.height,
+        preferredX, preferredY,
+        preferredX, preferredY, 0.0f);
+    spawnPlayer(pos.x, pos.y);
 }
 
 void Player::spawnPlayer(float startx, float starty)

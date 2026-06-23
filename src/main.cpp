@@ -20,16 +20,16 @@ void setupArena(Game &game, Grid &grid, CollisionMap &collisionMap);
 
 namespace
 {
-const Color HULL_FILL = {36, 42, 58, 255};
-const Color HULL_BORDER = {55, 200, 220, 255};
-const Color POD_FILL = {48, 92, 118, 255};
-const Color POD_BORDER = {90, 210, 240, 255};
-const Color BULK_FILL = {44, 52, 68, 255};
-const Color BULK_BORDER = {78, 168, 190, 255};
-const Color REACTOR_FILL = {52, 62, 82, 255};
-const Color REACTOR_BORDER = {100, 220, 245, 255};
-const Color ROCK_FILL = {86, 84, 80, 255};
-const Color ROCK_BORDER = {64, 62, 58, 255};
+const Color HULL_FILL = {32, 30, 34, 255};
+const Color HULL_BORDER = {72, 68, 64, 255};
+const Color POD_FILL = {48, 42, 36, 255};
+const Color POD_BORDER = {88, 78, 62, 255};
+const Color BULK_FILL = {38, 36, 40, 255};
+const Color BULK_BORDER = {68, 64, 60, 255};
+const Color REACTOR_FILL = {42, 38, 36, 255};
+const Color REACTOR_BORDER = {110, 75, 40, 255};
+const Color CRATE_FILL = {52, 46, 40, 255};
+const Color CRATE_BORDER = {82, 72, 58, 255};
 
 void addHull(Game &game, Grid &grid, CollisionMap &collisionMap, float x, float y, float w, float h)
 {
@@ -51,9 +51,9 @@ void addReactor(Game &game, Grid &grid, CollisionMap &collisionMap, float x, flo
     game.addObject(new GameObject(x, y, REACTOR_FILL, size, size, 0, 0, grid, collisionMap, REACTOR_BORDER, ObstacleType::ReactorPillar));
 }
 
-void addRock(Game &game, Grid &grid, CollisionMap &collisionMap, float x, float y, float size)
+void addCrate(Game &game, Grid &grid, CollisionMap &collisionMap, float x, float y, float w, float h)
 {
-    game.addObject(new GameObject(x, y, ROCK_FILL, size, size, 0, 0, grid, collisionMap, ROCK_BORDER, ObstacleType::MoonRock));
+    game.addObject(new GameObject(x, y, CRATE_FILL, w, h, 0, 0, grid, collisionMap, CRATE_BORDER, ObstacleType::CargoCrate));
 }
 }
 
@@ -62,79 +62,62 @@ void setupArena(Game &game, Grid &grid, CollisionMap &collisionMap)
     const float M = 1975.0f;
     const float W = 25.0f;
 
-    // Landing pad perimeter fence
+    // Outer hull
     addHull(game, grid, collisionMap, 0, 0, M, W);
     addHull(game, grid, collisionMap, 0, 0, W, M);
     addHull(game, grid, collisionMap, M, 0, W, M);
     addHull(game, grid, collisionMap, 0, M, M, W);
 
-    // Ship cross — outer hull shell
-    addHull(game, grid, collisionMap, 775, 775, 450, W);   // core N edge
-    addHull(game, grid, collisionMap, 775, 1200, 450, W);  // core S edge
-    addHull(game, grid, collisionMap, 775, 775, W, 450);   // core W edge
-    addHull(game, grid, collisionMap, 1200, 775, W, 450);  // core E edge
+    // Command core — reactor pillars with open lanes between them
+    addReactor(game, grid, collisionMap, 870, 870, 60);
+    addReactor(game, grid, collisionMap, 1070, 870, 60);
+    addReactor(game, grid, collisionMap, 870, 1070, 60);
+    addReactor(game, grid, collisionMap, 1070, 1070, 60);
 
-    addHull(game, grid, collisionMap, 850, 25, 300, W);    // north wing rim
-    addHull(game, grid, collisionMap, 850, 750, 300, W);
-    addHull(game, grid, collisionMap, 850, 1225, 300, W);
-    addHull(game, grid, collisionMap, 850, 1925, 300, W);
+    // Short hull ribs along outer rooms (cover only, never seal an area)
+    addHull(game, grid, collisionMap, 120, 120, 180, W);
+    addHull(game, grid, collisionMap, 120, 120, W, 160);
+    addHull(game, grid, collisionMap, 1680, 120, 180, W);
+    addHull(game, grid, collisionMap, 1830, 120, W, 160);
+    addHull(game, grid, collisionMap, 120, 1680, 180, W);
+    addHull(game, grid, collisionMap, 120, 1720, W, 160);
+    addHull(game, grid, collisionMap, 1680, 1680, 180, W);
+    addHull(game, grid, collisionMap, 1830, 1680, W, 160);
 
-    addHull(game, grid, collisionMap, 25, 850, W, 300);     // west wing rim
-    addHull(game, grid, collisionMap, 750, 850, W, 300);
-    addHull(game, grid, collisionMap, 1225, 850, W, 300);
-    addHull(game, grid, collisionMap, 1925, 850, W, 300);
+    // NW cargo — crates hug the corner, wide lane into the cross
+    addCrate(game, grid, collisionMap, 200, 200, 80, 70);
+    addCrate(game, grid, collisionMap, 380, 180, 75, 75);
+    addPod(game, grid, collisionMap, 260, 380, 70, 65);
+    addCrate(game, grid, collisionMap, 520, 300, 70, 70);
 
-    // Airlock gaps at wing tips (openings already between hull segments)
+    // NE engine — spaced machinery, open floor to the hub
+    addReactor(game, grid, collisionMap, 1580, 200, 55);
+    addReactor(game, grid, collisionMap, 1750, 220, 55);
+    addBulk(game, grid, collisionMap, 1650, 380, 140, 30);
+    addPod(game, grid, collisionMap, 1780, 420, 65, 65);
 
-    // --- Command core: reactor pillars (kept!) ---
-    addReactor(game, grid, collisionMap, 860, 860, 65);
-    addReactor(game, grid, collisionMap, 1075, 860, 65);
-    addReactor(game, grid, collisionMap, 860, 1075, 65);
-    addReactor(game, grid, collisionMap, 1075, 1075, 65);
-    addBulk(game, grid, collisionMap, 940, 820, 120, 35);
-    addBulk(game, grid, collisionMap, 940, 1145, 120, 35);
+    // SW maintenance
+    addBulk(game, grid, collisionMap, 200, 1620, 30, 140);
+    addCrate(game, grid, collisionMap, 300, 1720, 75, 70);
+    addCrate(game, grid, collisionMap, 480, 1680, 70, 75);
+    addPod(game, grid, collisionMap, 360, 1850, 65, 65);
 
-    // --- NW moon surface (exterior) ---
-    addRock(game, grid, collisionMap, 120, 100, 90);
-    addRock(game, grid, collisionMap, 350, 180, 110);
-    addRock(game, grid, collisionMap, 180, 420, 75);
-    addRock(game, grid, collisionMap, 550, 500, 95);
-    addPod(game, grid, collisionMap, 280, 300, 80, 70);   // supply drop on moon
+    // SE armory — scattered cover, no enclosed pocket
+    addCrate(game, grid, collisionMap, 1620, 1720, 80, 80);
+    addCrate(game, grid, collisionMap, 1780, 1780, 75, 75);
+    addPod(game, grid, collisionMap, 1700, 1580, 70, 70);
+    addCrate(game, grid, collisionMap, 1850, 1650, 70, 70);
 
-    // --- NE moon surface ---
-    addRock(game, grid, collisionMap, 1550, 120, 100);
-    addRock(game, grid, collisionMap, 1750, 300, 85);
-    addRock(game, grid, collisionMap, 1400, 450, 110);
-    addRock(game, grid, collisionMap, 1680, 550, 70);
-    addPod(game, grid, collisionMap, 1500, 250, 90, 75);
+    // Wing flanking cover — sits off the main N/S and E/W lanes
+    addPod(game, grid, collisionMap, 860, 420, 65, 65);
+    addPod(game, grid, collisionMap, 1110, 420, 65, 65);
+    addPod(game, grid, collisionMap, 860, 1510, 65, 65);
+    addPod(game, grid, collisionMap, 1110, 1510, 65, 65);
 
-    // --- SW moon surface ---
-    addRock(game, grid, collisionMap, 100, 1450, 105);
-    addRock(game, grid, collisionMap, 400, 1650, 90);
-    addRock(game, grid, collisionMap, 250, 1750, 80);
-    addRock(game, grid, collisionMap, 600, 1400, 100);
-    addPod(game, grid, collisionMap, 180, 1580, 85, 80);
-
-    // --- SE moon surface ---
-    addRock(game, grid, collisionMap, 1580, 1500, 95);
-    addRock(game, grid, collisionMap, 1750, 1700, 110);
-    addRock(game, grid, collisionMap, 1420, 1750, 85);
-    addRock(game, grid, collisionMap, 1650, 1350, 75);
-
-    // --- Ship interior cover (wings) ---
-    addBulk(game, grid, collisionMap, 900, 180, 200, 40);
-    addBulk(game, grid, collisionMap, 920, 280, 40, 180);
-    addPod(game, grid, collisionMap, 1050, 350, 75, 75);
-
-    addBulk(game, grid, collisionMap, 900, 1700, 200, 40);
-    addPod(game, grid, collisionMap, 1100, 1620, 80, 80);
-
-    addBulk(game, grid, collisionMap, 120, 920, 40, 200);
-    addPod(game, grid, collisionMap, 280, 1050, 75, 75);
-
-    addBulk(game, grid, collisionMap, 1750, 940, 40, 200);
-    addBulk(game, grid, collisionMap, 1600, 1050, 120, 40);
-    addPod(game, grid, collisionMap, 1680, 880, 70, 70);
+    addCrate(game, grid, collisionMap, 420, 860, 70, 70);
+    addCrate(game, grid, collisionMap, 420, 1110, 70, 70);
+    addCrate(game, grid, collisionMap, 1510, 860, 70, 70);
+    addCrate(game, grid, collisionMap, 1510, 1110, 70, 70);
 }
 
 int main()
@@ -168,6 +151,7 @@ int main()
         addBugs(bugs, grid, collisionMap, 18);
 
         setupArena(game, grid, collisionMap);
+        player.spawnAtClearPosition(400.0f, 1000.0f);
 
         game.run(player, zombies, bugs, bullets);
 

@@ -10,7 +10,7 @@ enum class ObstacleType
     SupplyPod,
     Bulkhead,
     ReactorPillar,
-    MoonRock
+    CargoCrate
 };
 
 class GameObject

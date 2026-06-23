@@ -54,7 +54,12 @@ void Game::createZombies(std::vector<Zombie *> &zombies, Vector2 playerPos)
             continue;
         }
 
-        Vector2 position = grid.getSpawnPositionAwayFrom(playerPos.x, playerPos.y, minSpawnDistance);
+        Vector2 position = grid.getClearSpawnPosition(
+            collisionMap,
+            (float)zombies[i]->getTextureWidth(),
+            (float)zombies[i]->getTextureHeight(),
+            playerPos.x, playerPos.y,
+            playerPos.x, playerPos.y, minSpawnDistance);
         zombies[i]->spawnZombie(position.x, position.y);
         aliveZombieCount++;
     }
@@ -83,7 +88,12 @@ void Game::createBugs(std::vector<Bug *> &bugs, Vector2 playerPos)
         if (groupAlive)
             continue;
 
-        Vector2 startPosition = grid.getSpawnPositionAwayFrom(playerPos.x, playerPos.y, minSpawnDistance);
+        Vector2 startPosition = grid.getClearGroupSpawnPosition(
+            collisionMap,
+            (float)bugs[0]->getTextureWidth(),
+            (float)bugs[0]->getTextureHeight(),
+            gridSize, spacing,
+            playerPos.x, playerPos.y, minSpawnDistance);
         for (int i = 0; i < gridSize; i++)
         {
             for (int j = 0; j < gridSize; j++)
@@ -248,59 +258,41 @@ void Game::drawEnvironment()
     const int mapH = grid.getMapHeight();
     const int tile = 50;
 
+    const Color deckA = {22, 22, 26, 255};
+    const Color deckB = {18, 18, 22, 255};
+
     for (int ty = 0; ty < mapH; ty += tile)
     {
         for (int tx = 0; tx < mapW; tx += tile)
         {
             bool alt = ((tx / tile) + (ty / tile)) % 2 == 0;
-            DrawRectangle(tx, ty, tile, tile, alt ? Color{98, 96, 92, 255} : Color{90, 88, 84, 255});
+            DrawRectangle(tx, ty, tile, tile, alt ? deckA : deckB);
         }
     }
 
-    const Vector2 craters[] = {{320, 300}, {1680, 280}, {300, 1680}, {1700, 1650}, {980, 180}, {980, 1820}};
-    for (Vector2 c : craters)
-    {
-        DrawCircleV(c, 110, Color{72, 70, 68, 255});
-        DrawCircleV(c, 78, Color{58, 56, 54, 220});
-        DrawCircleV({c.x + 28, c.y - 18}, 16, Color{108, 106, 102, 180});
-    }
+    // Worn panel seams across the hull
+    for (int ty = 0; ty < mapH; ty += 80)
+        DrawLineEx({0, (float)ty}, {(float)mapW, (float)ty}, 1.0f, Color{12, 12, 14, 140});
+    for (int tx = 0; tx < mapW; tx += 80)
+        DrawLineEx({(float)tx, 0}, {(float)tx, (float)mapH}, 1.0f, Color{12, 12, 14, 140});
 
-    const Color deckA = {28, 34, 48, 255};
-    const Color deckB = {24, 30, 42, 255};
-    const Rectangle shipRegions[] = {
-        {775, 775, 450, 450},
-        {850, 25, 300, 750},
-        {850, 1225, 300, 750},
-        {25, 850, 750, 300},
-        {1225, 850, 750, 300},
-    };
-    for (Rectangle region : shipRegions)
-    {
-        for (int ty = (int)region.y; ty < region.y + region.height; ty += tile)
-        {
-            for (int tx = (int)region.x; tx < region.x + region.width; tx += tile)
-            {
-                bool alt = ((tx / tile) + (ty / tile)) % 2 == 0;
-                DrawRectangle(tx, ty, tile, tile, alt ? deckA : deckB);
-            }
-        }
-    }
+    // Grime patches
+    const Vector2 stains[] = {{280, 340}, {620, 180}, {1580, 420}, {1750, 1550}, {420, 1680}, {1380, 1720}};
+    for (Vector2 s : stains)
+        DrawCircleV(s, 55, Color{14, 13, 16, 90});
 
-    for (Rectangle region : shipRegions)
-    {
-        DrawRectangleLinesEx(region, 3.0f, Color{55, 200, 220, 140});
-        for (float x = region.x + 20; x < region.x + region.width - 10; x += 80)
-            DrawLineEx({x, region.y + 8}, {x, region.y + region.height - 8}, 1.0f, Color{45, 55, 72, 120});
-        for (float y = region.y + 20; y < region.y + region.height - 10; y += 80)
-            DrawLineEx({region.x + 8, y}, {region.x + region.width - 8, y}, 1.0f, Color{45, 55, 72, 120});
-    }
+    // Main corridor lanes (open cross, ~260px wide arms)
+    DrawRectangle(870, 0, 260, mapH, Color{26, 25, 28, 70});
+    DrawRectangle(0, 870, mapW, 260, Color{26, 25, 28, 70});
 
-    DrawCircleLines(1000, 1000, 165, Color{60, 210, 235, 120});
-    DrawCircleLines(1000, 1000, 168, Color{60, 210, 235, 60});
+    // Reactor chamber floor ring
+    DrawCircleLines(1000, 1000, 155, Color{80, 50, 25, 90});
+    DrawCircleLines(1000, 1000, 158, Color{50, 32, 18, 50});
 
-    const Vector2 locks[] = {{1000, 55}, {1000, 1920}, {55, 1000}, {1920, 1000}};
-    for (Vector2 p : locks)
-        DrawRectangle(p.x - 35, p.y - 12, 70, 24, Color{50, 190, 215, 160});
+    // Hazard striping at hub mouth (decorative, not collision)
+    const Vector2 junctions[] = {{1000, 820}, {1000, 1180}, {820, 1000}, {1180, 1000}};
+    for (Vector2 p : junctions)
+        DrawRectangle(p.x - 32, p.y - 6, 64, 12, Color{110, 82, 28, 120});
 }
 
 void Game::drawHealthBar(const Player &player)

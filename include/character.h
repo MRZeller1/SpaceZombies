@@ -64,5 +64,6 @@ public:
     void updateAnimation();
     void updateGridPosition();
     int getTextureWidth() { return currentTexture.width; }
+    int getTextureHeight() { return currentTexture.height; }
 };
 #endif

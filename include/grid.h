@@ -8,6 +8,8 @@
 #include <algorithm> 
 #include "gridNode.h"
 
+class CollisionMap;
+
 class Grid
 {
 private:
@@ -16,6 +18,7 @@ private:
      int rows, cols;
      Vector2 origin;
      std::vector<std::vector<GridNode *>> grid;
+     bool canReach(float fromX, float fromY, float toX, float toY);
 public:
      Grid(int width, int height, int cellSize);
      void draw() const;
@@ -24,6 +27,12 @@ public:
      Vector2 getObjectGridSize(float objectWidth, float objectHeight);
      Vector2 getRandomUnocupiedPosition();
      Vector2 getSpawnPositionAwayFrom(float centerX, float centerY, float minDistance);
+     Vector2 getClearSpawnPosition(CollisionMap &collisionMap, float width, float height,
+                                   float preferredX, float preferredY,
+                                   float avoidX, float avoidY, float minDistance);
+     Vector2 getClearGroupSpawnPosition(CollisionMap &collisionMap, float unitWidth, float unitHeight,
+                                        int gridSize, int spacing,
+                                        float avoidX, float avoidY, float minDistance);
      void setCellAttributes(int x, int y, int type);
      int getCellSize();
      int getMapWidth() const { return cols * cellSize; }

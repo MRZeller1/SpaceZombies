@@ -1,4 +1,22 @@
 #include "grid.h"
+#include "collisionMap.h"
+
+namespace
+{
+Rectangle makeSpawnRect(float centerX, float centerY, float width, float height)
+{
+    return {centerX - width * 0.5f, centerY - height * 0.5f, width, height};
+}
+
+bool isFarEnough(float x, float y, float avoidX, float avoidY, float minDistance)
+{
+    if (minDistance <= 0.0f)
+        return true;
+    float dx = x - avoidX;
+    float dy = y - avoidY;
+    return dx * dx + dy * dy >= minDistance * minDistance;
+}
+}
 
 // constructor for the grid         
 Grid::Grid(int width, int height, int cellSize)
@@ -105,7 +123,7 @@ Vector2 Grid::getSpawnPositionAwayFrom(float centerX, float centerY, float minDi
     {
         int x = GetRandomValue(margin, cols - 1 - margin);
         int y = GetRandomValue(margin, rows - 1 - margin);
-        if (grid[y][x]->getType() != 0)
+        if (grid[y][x]->isObjectNode())
             continue;
 
         float worldX = x * cellSize + cellSize * 0.5f;
@@ -116,12 +134,211 @@ Vector2 Grid::getSpawnPositionAwayFrom(float centerX, float centerY, float minDi
             return {worldX, worldY};
     }
 
-    // Fallback: spawn in the quadrant farthest from the player
     bool right = centerX < (cols * cellSize) * 0.5f;
     bool down = centerY < (rows * cellSize) * 0.5f;
     int x = right ? cols - margin - 1 : margin;
     int y = down ? rows - margin - 1 : margin;
     return {x * cellSize + cellSize * 0.5f, y * cellSize + cellSize * 0.5f};
+}
+
+bool Grid::canReach(float fromX, float fromY, float toX, float toY)
+{
+    Vector2 from = getGridPosition(fromX, fromY);
+    Vector2 to = getGridPosition(toX, toY);
+    int sx = static_cast<int>(from.x);
+    int sy = static_cast<int>(from.y);
+    int tx = static_cast<int>(to.x);
+    int ty = static_cast<int>(to.y);
+
+    if (!isValidCell(sx, sy) || !isValidCell(tx, ty))
+        return false;
+    if (grid[sy][sx]->isObjectNode() || grid[ty][tx]->isObjectNode())
+        return false;
+
+    std::vector<std::vector<bool>> visited(rows, std::vector<bool>(cols, false));
+    std::queue<std::pair<int, int>> cells;
+    cells.push({sx, sy});
+    visited[sy][sx] = true;
+
+    const int dx[] = {-1, 1, 0, 0};
+    const int dy[] = {0, 0, -1, 1};
+
+    while (!cells.empty())
+    {
+        auto [cx, cy] = cells.front();
+        cells.pop();
+        if (cx == tx && cy == ty)
+            return true;
+
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = cx + dx[i];
+            int ny = cy + dy[i];
+            if (!isValidCell(nx, ny) || visited[ny][nx])
+                continue;
+            if (grid[ny][nx]->isObjectNode())
+                continue;
+            visited[ny][nx] = true;
+            cells.push({nx, ny});
+        }
+    }
+    return false;
+}
+
+Vector2 Grid::getClearSpawnPosition(CollisionMap &collisionMap, float width, float height,
+                                    float preferredX, float preferredY,
+                                    float avoidX, float avoidY, float minDistance)
+{
+    const int margin = 2;
+
+    auto isBlocked = [&](float centerX, float centerY) {
+        return collisionMap.isSpawnBlocked(makeSpawnRect(centerX, centerY, width, height));
+    };
+
+    auto cellCenter = [&](int gx, int gy) {
+        return Vector2{gx * cellSize + cellSize * 0.5f, gy * cellSize + cellSize * 0.5f};
+    };
+
+    auto isValidSpawn = [&](float centerX, float centerY, bool checkDistance) {
+        if (isBlocked(centerX, centerY))
+            return false;
+        if (checkDistance && !isFarEnough(centerX, centerY, avoidX, avoidY, minDistance))
+            return false;
+        if (minDistance > 0.0f && !canReach(centerX, centerY, avoidX, avoidY))
+            return false;
+        return true;
+    };
+
+    if (isValidSpawn(preferredX, preferredY, minDistance > 0.0f))
+        return {preferredX, preferredY};
+
+    for (int attempt = 0; attempt < 150; attempt++)
+    {
+        int gx = GetRandomValue(margin, cols - 1 - margin);
+        int gy = GetRandomValue(margin, rows - 1 - margin);
+        if (grid[gy][gx]->isObjectNode())
+            continue;
+
+        Vector2 candidate = cellCenter(gx, gy);
+        if (isValidSpawn(candidate.x, candidate.y, true))
+            return candidate;
+    }
+
+    Vector2 best = cellCenter(margin, margin);
+    float bestScore = -1.0f;
+
+    for (bool requireDistance : {true, false})
+    {
+        for (int gy = margin; gy < rows - margin; gy++)
+        {
+            for (int gx = margin; gx < cols - margin; gx++)
+            {
+                if (grid[gy][gx]->isObjectNode())
+                    continue;
+
+                Vector2 candidate = cellCenter(gx, gy);
+                if (!isValidSpawn(candidate.x, candidate.y, requireDistance))
+                    continue;
+
+                float dx = candidate.x - preferredX;
+                float dy = candidate.y - preferredY;
+                float score = dx * dx + dy * dy;
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    best = candidate;
+                }
+            }
+        }
+        if (bestScore >= 0.0f)
+            break;
+    }
+
+    return best;
+}
+
+Vector2 Grid::getClearGroupSpawnPosition(CollisionMap &collisionMap, float unitWidth, float unitHeight,
+                                         int gridSize, int spacing,
+                                         float avoidX, float avoidY, float minDistance)
+{
+    const int margin = 2;
+
+    auto groupBlocked = [&](float startX, float startY) {
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                float cx = startX + i * spacing;
+                float cy = startY + j * spacing;
+                if (collisionMap.isSpawnBlocked(makeSpawnRect(cx, cy, unitWidth, unitHeight)))
+                    return true;
+            }
+        }
+        return false;
+    };
+
+    auto groupCenter = [&](float startX, float startY) {
+        float span = (gridSize - 1) * spacing;
+        return Vector2{startX + span * 0.5f, startY + span * 0.5f};
+    };
+
+    auto isValidGroup = [&](float startX, float startY, bool checkDistance) {
+        if (groupBlocked(startX, startY))
+            return false;
+        Vector2 center = groupCenter(startX, startY);
+        if (checkDistance && !isFarEnough(center.x, center.y, avoidX, avoidY, minDistance))
+            return false;
+        if (minDistance > 0.0f && !canReach(center.x, center.y, avoidX, avoidY))
+            return false;
+        return true;
+    };
+
+    for (int attempt = 0; attempt < 150; attempt++)
+    {
+        int gx = GetRandomValue(margin, cols - 1 - margin);
+        int gy = GetRandomValue(margin, rows - 1 - margin);
+        if (grid[gy][gx]->isObjectNode())
+            continue;
+
+        float startX = gx * cellSize + cellSize * 0.5f;
+        float startY = gy * cellSize + cellSize * 0.5f;
+        if (isValidGroup(startX, startY, true))
+            return {startX, startY};
+    }
+
+    Vector2 best = {margin * cellSize + cellSize * 0.5f, margin * cellSize + cellSize * 0.5f};
+    float bestScore = -1.0f;
+
+    for (bool requireDistance : {true, false})
+    {
+        for (int gy = margin; gy < rows - margin; gy++)
+        {
+            for (int gx = margin; gx < cols - margin; gx++)
+            {
+                if (grid[gy][gx]->isObjectNode())
+                    continue;
+
+                float startX = gx * cellSize + cellSize * 0.5f;
+                float startY = gy * cellSize + cellSize * 0.5f;
+                if (!isValidGroup(startX, startY, requireDistance))
+                    continue;
+
+                Vector2 center = groupCenter(startX, startY);
+                float dx = center.x - avoidX;
+                float dy = center.y - avoidY;
+                float score = dx * dx + dy * dy;
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    best = {startX, startY};
+                }
+            }
+        }
+        if (bestScore >= 0.0f)
+            break;
+    }
+
+    return best;
 }
 // get the size of object in cell units
 Vector2 Grid::getObjectGridSize(float objectWidth, float objectHeight)
