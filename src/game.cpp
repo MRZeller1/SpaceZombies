@@ -40,7 +40,7 @@ std::vector<GameObject *> Game::getObjects()
 }
 void Game::createZombies(std::vector<Zombie *> &zombies, Vector2 playerPos)
 {
-    const float minSpawnDistance = 450.0f;
+    const float minSpawnDistance = 280.0f;
     aliveZombieCount = 0;
 
     for (size_t i = 0; i < zombies.size(); i++)
@@ -66,7 +66,7 @@ void Game::createBugs(std::vector<Bug *> &bugs, Vector2 playerPos)
     const int spacing = 5;
     const int bugsPerGroup = gridSize * gridSize;
     const int groupCount = static_cast<int>(bugs.size()) / bugsPerGroup;
-    const float minSpawnDistance = 350.0f;
+    const float minSpawnDistance = 220.0f;
 
     for (int k = 0; k < groupCount; k++)
     {
@@ -108,9 +108,7 @@ void Game::run(Player &player, std::vector<Zombie *> &zombies, std::vector<Bug *
         ClearBackground(BLACK);
         DrawText("Space Zombies!", 685, 10, 20, LIGHTGRAY);
         BeginMode2D(player.getCamera());
-        DrawRectangle(0, 0, 3025, 3025, DARKGRAY);
-
-        //grid.draw();
+        drawEnvironment();
         if (!gameStart || countAliveZombies(zombies) == 0)
         {
             createZombies(zombies, player.getPosition());
@@ -242,6 +240,67 @@ int Game::countAliveZombies(const std::vector<Zombie *> &zombies) const
             alive++;
     }
     return alive;
+}
+
+void Game::drawEnvironment()
+{
+    const int mapW = grid.getMapWidth();
+    const int mapH = grid.getMapHeight();
+    const int tile = 50;
+
+    for (int ty = 0; ty < mapH; ty += tile)
+    {
+        for (int tx = 0; tx < mapW; tx += tile)
+        {
+            bool alt = ((tx / tile) + (ty / tile)) % 2 == 0;
+            DrawRectangle(tx, ty, tile, tile, alt ? Color{98, 96, 92, 255} : Color{90, 88, 84, 255});
+        }
+    }
+
+    const Vector2 craters[] = {{320, 300}, {1680, 280}, {300, 1680}, {1700, 1650}, {980, 180}, {980, 1820}};
+    for (Vector2 c : craters)
+    {
+        DrawCircleV(c, 110, Color{72, 70, 68, 255});
+        DrawCircleV(c, 78, Color{58, 56, 54, 220});
+        DrawCircleV({c.x + 28, c.y - 18}, 16, Color{108, 106, 102, 180});
+    }
+
+    const Color deckA = {28, 34, 48, 255};
+    const Color deckB = {24, 30, 42, 255};
+    const Rectangle shipRegions[] = {
+        {775, 775, 450, 450},
+        {850, 25, 300, 750},
+        {850, 1225, 300, 750},
+        {25, 850, 750, 300},
+        {1225, 850, 750, 300},
+    };
+    for (Rectangle region : shipRegions)
+    {
+        for (int ty = (int)region.y; ty < region.y + region.height; ty += tile)
+        {
+            for (int tx = (int)region.x; tx < region.x + region.width; tx += tile)
+            {
+                bool alt = ((tx / tile) + (ty / tile)) % 2 == 0;
+                DrawRectangle(tx, ty, tile, tile, alt ? deckA : deckB);
+            }
+        }
+    }
+
+    for (Rectangle region : shipRegions)
+    {
+        DrawRectangleLinesEx(region, 3.0f, Color{55, 200, 220, 140});
+        for (float x = region.x + 20; x < region.x + region.width - 10; x += 80)
+            DrawLineEx({x, region.y + 8}, {x, region.y + region.height - 8}, 1.0f, Color{45, 55, 72, 120});
+        for (float y = region.y + 20; y < region.y + region.height - 10; y += 80)
+            DrawLineEx({region.x + 8, y}, {region.x + region.width - 8, y}, 1.0f, Color{45, 55, 72, 120});
+    }
+
+    DrawCircleLines(1000, 1000, 165, Color{60, 210, 235, 120});
+    DrawCircleLines(1000, 1000, 168, Color{60, 210, 235, 60});
+
+    const Vector2 locks[] = {{1000, 55}, {1000, 1920}, {55, 1000}, {1920, 1000}};
+    for (Vector2 p : locks)
+        DrawRectangle(p.x - 35, p.y - 12, 70, 24, Color{50, 190, 215, 160});
 }
 
 void Game::drawHealthBar(const Player &player)

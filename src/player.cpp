@@ -10,7 +10,7 @@ Player::Player(std::vector<Weapon *> &weapons, Grid &grid, CollisionMap &collisi
     type = 1;
     currentTexture = leftTexture;
     currentWeapon = weapons.empty() ? nullptr : weapons[0];
-    spawnPlayer(200, 200);
+    spawnPlayer(320, 1000);
 }
 
 Player::~Player()

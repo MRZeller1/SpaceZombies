@@ -42,6 +42,7 @@ public:
     void drawWeaponHud(const Player &player);
     void drawGameOverBanner(Player &player);
     int countAliveZombies(const std::vector<Zombie *> &zombies) const;
+    void drawEnvironment();
     void updateScore(float deltaTime);
     float getScore() const { return score; }
     void drawScore();

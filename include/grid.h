@@ -26,6 +26,8 @@ public:
      Vector2 getSpawnPositionAwayFrom(float centerX, float centerY, float minDistance);
      void setCellAttributes(int x, int y, int type);
      int getCellSize();
+     int getMapWidth() const { return cols * cellSize; }
+     int getMapHeight() const { return rows * cellSize; }
      GridNode *getGridNode(int x, int y);
      void updateGridNode(int x, int y, int attribute);
      void resetDistance();
